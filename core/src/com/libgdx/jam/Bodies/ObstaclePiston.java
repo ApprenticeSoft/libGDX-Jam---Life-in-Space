@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -39,13 +40,7 @@ public class ObstaclePiston extends Obstacle{
 			create(world, camera, rectangleObject2);
 			rectangleAxis = ((RectangleMapObject) rectangleObject1).getRectangle();
 		}
-		
-		//Drawing
-		ninePatch = new NinePatch(textureAtlas.findRegion("PistonHead"), 24, 24, 12, 12);
-		ninePatch.scale(0.5f*GameConstants.MPP, 0.5f*GameConstants.MPP);
-		ninePatchAxis = new NinePatch(textureAtlas.findRegion("PistonAxis"), 24, 24, 24, 24);
-		ninePatchAxis.scale(0.5f*GameConstants.MPP, 0.5f*GameConstants.MPP);
-		
+			
 		//Delay before activation
 		if(rectangleObject1.getProperties().get("Delay") != null){
 			delay = Float.parseFloat((String) rectangleObject1.getProperties().get("Delay"));
@@ -89,6 +84,12 @@ public class ObstaclePiston extends Obstacle{
 		initialPosition = new Vector2(posX, posY);
 		posAxisSprite = new Vector2(0,0);
 		if(posX == posXAxis){
+			//Drawing
+			ninePatch = new NinePatch(textureAtlas.findRegion("PistonHead"), 24, 24, 24, 24);
+			ninePatch.scale(0.5f*GameConstants.MPP, 0.5f*GameConstants.MPP);
+			ninePatchAxis = new NinePatch(textureAtlas.findRegion("PistonAxis"), 24, 24, 24, 24);
+			ninePatchAxis.scale(0.5f*GameConstants.MPP, 0.5f*GameConstants.MPP);
+			
 			posAxisSprite.x = - widthAxis;
 			finalPosition = new Vector2(initialPosition.x, initialPosition.y + rectangleAxis.height * Math.signum(posYAxis - posY) * GameConstants.MPP);
 			
@@ -98,6 +99,12 @@ public class ObstaclePiston extends Obstacle{
 				posAxisSprite.y = - height - 2 * heightAxis;
 		}
 		else{
+			//Drawing
+			ninePatch = new NinePatch(textureAtlas.findRegion("PistonHeadHorizontal"), 24, 24, 24, 24);
+			ninePatch.scale(0.5f*GameConstants.MPP, 0.5f*GameConstants.MPP);
+			ninePatchAxis = new NinePatch(textureAtlas.findRegion("PistonAxisHorizontal"), 24, 24, 24, 24);
+			ninePatchAxis.scale(0.5f*GameConstants.MPP, 0.5f*GameConstants.MPP);
+			
 			posAxisSprite.y = - heightAxis;
 			finalPosition = new Vector2(initialPosition.x + rectangleAxis.width * Math.signum(posXAxis - posX) * GameConstants.MPP, initialPosition.y);
 			
@@ -144,6 +151,10 @@ public class ObstaclePiston extends Obstacle{
 	@Override
 	public void activate(){
 		active = !active;
+	}
+	
+	@Override	
+	public void draw(SpriteBatch batch, TextureAtlas textureAtlas){		
 	}
 	
 	@Override	

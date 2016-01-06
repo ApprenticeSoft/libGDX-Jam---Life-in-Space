@@ -16,7 +16,7 @@ public class GameConstants {
 	public static int PPT = 100;					//Pixel/Tile
 	
 	//Screen constants
-	public static int NB_HORIZONTAL_TILE = 13;
+	public static int NB_HORIZONTAL_TILE = 12;
 	public static float SCREEN_WIDTH = MPP * NB_HORIZONTAL_TILE * PPT;
 	public static float SCREEN_RATIO = (float)Gdx.graphics.getHeight()/(float)Gdx.graphics.getWidth();
 	public static float SCREEN_HEIGHT = SCREEN_WIDTH * SCREEN_RATIO;

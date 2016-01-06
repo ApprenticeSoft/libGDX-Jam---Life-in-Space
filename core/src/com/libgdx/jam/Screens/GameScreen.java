@@ -166,12 +166,14 @@ public class GameScreen implements Screen{
 		//Game map
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
-		debugRenderer.render(world, camera.combined);
+		//debugRenderer.render(world, camera.combined);
 		    
 		//HUD and hero
 		game.batch.begin();
-		for(Obstacle obstacle : mapReader.walls)
+		for(Obstacle obstacle : mapReader.obstaclesWithNinePatch)
 			obstacle.draw(game.batch);
+		for(Obstacle obstacle : mapReader.obstacles)
+			obstacle.draw(game.batch, textureAtlas);
 		hud.draw();
 		game.batch.setColor(1, 1, 1, 1);
 		mapReader.hero.draw(game.batch, GameConstants.ANIM_TIME);

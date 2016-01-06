@@ -30,7 +30,7 @@ public class TiledMapReader {
 	private static OrthographicCamera camera;
 	private static World world;
     private MapObjects objects;
-	public Array<Obstacle> obstacles, walls;
+	public Array<Obstacle> obstacles, obstaclesWithNinePatch;
 	public Array<ItemSwitch> switchs;
 	public Array<Item> items;
 	private Array<MapObject> pistons;
@@ -45,7 +45,7 @@ public class TiledMapReader {
 		objects = tiledMap.getLayers().get("Objects").getObjects();
 
         obstacles = new Array<Obstacle>(); 
-        walls = new Array<Obstacle>();    
+        obstaclesWithNinePatch = new Array<Obstacle>();    
         pistons = new Array<MapObject>();
         switchs = new Array<ItemSwitch>();
         items = new Array<Item>();
@@ -85,7 +85,7 @@ public class TiledMapReader {
         	}
         	else{
         		Wall obstacle = new Wall(world, camera, rectangleObject, game.assets.get("Images/Images.pack", TextureAtlas.class));
-                walls.add(obstacle);
+                obstacles.add(obstacle);
         	}
         }
         
@@ -97,7 +97,7 @@ public class TiledMapReader {
         					i != j){  				
         				ObstaclePiston piston = new ObstaclePiston(world, camera, pistons.get(i), game.assets.get("Images/Images.pack", TextureAtlas.class), pistons.get(j));
         				obstacles.add(piston);
-        				walls.add(piston);
+        				obstacles.add(piston);
         				
         				pistons.removeIndex(i);
         				pistons.removeIndex(j);
@@ -135,12 +135,32 @@ public class TiledMapReader {
         		}
         	}
         }
+        
+        
+        //Obstacle organization
+	    for(int i = obstacles.size - 1; i > -1; i--){
+	    	if(obstacles.get(i).getClass().toString().equals("class com.libgdx.jam.Bodies.ObstaclePiston")){
+	    		obstaclesWithNinePatch.add(obstacles.get(i));
+	    		obstacles.removeIndex(obstacles.indexOf(obstacles.get(i), true));
+	    		System.out.println("obstacles.size = " + obstacles.size);
+	    	}
+	    }
+	    for(int i = obstacles.size - 1; i > -1; i--){
+	    	if(obstacles.get(i).getClass().toString().equals("class com.libgdx.jam.Bodies.Wall")){
+	    		obstaclesWithNinePatch.add(obstacles.get(i));
+	    		obstacles.removeIndex(obstacles.indexOf(obstacles.get(i), true));
+	    		System.out.println("obstacles.size = " + obstacles.size);
+	    	}
+	    }
 	}
 	
 	public void active(){
 		hero.displacement();
 		
         for(Obstacle obstacle : obstacles)
+        	obstacle.active();
+
+        for(Obstacle obstacle : obstaclesWithNinePatch)
         	obstacle.active();
         
         for(Item item: items)
