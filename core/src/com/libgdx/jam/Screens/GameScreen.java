@@ -63,7 +63,7 @@ public class GameScreen implements Screen{
 	
 	public GameScreen(final MyGdxGame game){
 		this.game= game;
-
+		
 		GameConstants.GAME_PAUSED = false;
 		GameConstants.ANIM_TIME = 0;
 		
@@ -107,14 +107,12 @@ public class GameScreen implements Screen{
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.displacement(mapReader.hero, tiledMap);
-        camera.update();        
+        camera.update();      
+        tiledMapRenderer.setView(camera);  
 
-        //Test animation
+        //Animation
         GameConstants.ANIM_TIME += Gdx.graphics.getDeltaTime();
         backgroundTime += Gdx.graphics.getDeltaTime();
-        
-        Vector3 posBackground = new Vector3(0,0,0);
-        camera.project(posBackground);
         
 		if(!GameConstants.GAME_PAUSED){     		
 	        if(Gdx.input.isKeyPressed(Keys.ESCAPE)){
@@ -133,23 +131,10 @@ public class GameScreen implements Screen{
 		}
 
 		stage.act();
-
+		
 		//Drawing graphics
 		//Background	
 		game.batch.begin();
-		/*
-		game.batch.draw(backgroundTexture, 
-						-posBackground.x * camera.viewportWidth / Gdx.graphics.getWidth(), 
-						-posBackground.y * camera.viewportHeight / Gdx.graphics.getHeight(), 
-						camera.viewportWidth, 
-						camera.viewportHeight,  
-						(int)(backgroundTime * 8), 
-						0, 
-						(int)(levelPixelWidth * 10), 
-						(int)(levelPixelHeight * 10), 
-						false, 
-						false);
-		*/
 		game.batch.draw(backgroundTexture, 
 				0, 
 				0, 
@@ -164,9 +149,8 @@ public class GameScreen implements Screen{
 		game.batch.end();
 		
 		//Game map
-        tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
-		//debugRenderer.render(world, camera.combined);
+		debugRenderer.render(world, camera.combined);
 		    
 		//HUD and hero
 		game.batch.begin();
@@ -184,6 +168,13 @@ public class GameScreen implements Screen{
 		//Test Box2DLight
 		rayHandler.setCombinedMatrix(camera);
 		rayHandler.updateAndRender();
+		
+		if (Gdx.input.isKeyPressed(Keys.Z)) {
+            camera.zoom += 0.02;
+        }
+        if (Gdx.input.isKeyPressed(Keys.X)) {
+            camera.zoom -= 0.02;
+        }
 	}
 
 	@Override

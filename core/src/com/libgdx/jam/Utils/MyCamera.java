@@ -44,14 +44,14 @@ public class MyCamera extends  OrthographicCamera{
 		*/
 		
 		//Positioning relative to the level map limits
-		if(this.position.x + this.viewportWidth/2 > ((float)(tiledMap.getProperties().get("width", Integer.class)*GameConstants.PPT))*GameConstants.MPP)
-			this.position.set(((float)(tiledMap.getProperties().get("width", Integer.class)*GameConstants.PPT))*GameConstants.MPP - this.viewportWidth/2, this.position.y, 0);
-		else if(this.position.x - this.viewportWidth/2 < 0)
-			this.position.set(this.viewportWidth/2, this.position.y, 0);
-		if(this.position.y + this.viewportHeight/2 > ((float)(tiledMap.getProperties().get("height", Integer.class)*GameConstants.PPT))*GameConstants.MPP)
-			this.position.set(this.position.x, ((float)(tiledMap.getProperties().get("height", Integer.class)*GameConstants.PPT))*GameConstants.MPP - this.viewportHeight/2, 0);
-		else if(this.position.y - this.viewportHeight/2 < 0)
-			this.position.set(this.position.x, this.viewportHeight/2, 0);	
+		if(position.x + viewportWidth/2 > ((float)(tiledMap.getProperties().get("width", Integer.class)*GameConstants.PPT))*GameConstants.MPP)
+			position.set(((float)(tiledMap.getProperties().get("width", Integer.class)*GameConstants.PPT))*GameConstants.MPP - viewportWidth/2, position.y, 0);
+		else if(position.x - viewportWidth/2 < 0)
+			position.set(viewportWidth/2, position.y, 0);
+		if(position.y + viewportHeight/2 > ((float)(tiledMap.getProperties().get("height", Integer.class)*GameConstants.PPT))*GameConstants.MPP)
+			position.set(position.x, ((float)(tiledMap.getProperties().get("height", Integer.class)*GameConstants.PPT))*GameConstants.MPP - viewportHeight/2, 0);
+		else if(position.y - viewportHeight/2 < 0)
+			position.set(position.x, viewportHeight/2, 0);	
 		
 	}
 }

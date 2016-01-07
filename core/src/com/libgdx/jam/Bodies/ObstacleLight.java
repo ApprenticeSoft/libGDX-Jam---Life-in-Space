@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 
@@ -33,6 +34,15 @@ public class ObstacleLight extends Obstacle{
 		}
 		else
 			stringTexture = "CrateSquare";
+		
+		//Impulse
+		if(rectangleObject.getProperties().get("Impulse") != null){
+			body.applyLinearImpulse(new Vector2(MathUtils.random(-15, 15) * body.getFixtureList().get(0).getDensity(), 
+												MathUtils.random(-15, 15) * body.getFixtureList().get(0).getDensity()), 
+									new Vector2(body.getPosition().x + MathUtils.random(-0.9f * width, 0.9f * width), 
+												body.getPosition().y + MathUtils.random(-0.9f * height, 0.9f * height)), 
+									true);
+		}
 	}
 	
 	@Override

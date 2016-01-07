@@ -40,8 +40,8 @@ public class Obstacle {
 	public Obstacle(World world, OrthographicCamera camera, MapObject rectangleObject, TextureAtlas textureAtlas){		
 		//create(world, camera, rectangleObject);     
 
-		ninePatch = new NinePatch(textureAtlas.findRegion("WallLarge2"), 49, 49, 49, 49);
-		ninePatch.scale(0.5f*GameConstants.MPP, 0.5f*GameConstants.MPP);
+		//ninePatch = new NinePatch(textureAtlas.findRegion("WallLarge2"), 49, 49, 49, 49);
+		//ninePatch.scale(0.5f*GameConstants.MPP, 0.5f*GameConstants.MPP);
 	}
 	
 	public Obstacle(World world, OrthographicCamera camera, PolylineMapObject polylineObject){
