@@ -13,7 +13,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -150,7 +149,7 @@ public class GameScreen implements Screen{
 		
 		//Game map
         tiledMapRenderer.render();
-		debugRenderer.render(world, camera.combined);
+		//debugRenderer.render(world, camera.combined);
 		    
 		//HUD and hero
 		game.batch.begin();
@@ -158,9 +157,11 @@ public class GameScreen implements Screen{
 			obstacle.draw(game.batch);
 		for(Obstacle obstacle : mapReader.obstacles)
 			obstacle.draw(game.batch, textureAtlas);
-		hud.draw();
-		game.batch.setColor(1, 1, 1, 1);
+		//game.batch.setColor(1, 1, 1, 1);
 		mapReader.hero.draw(game.batch, GameConstants.ANIM_TIME);
+		for(Leak leak : mapReader.leaks)
+			leak.draw(game.batch, backgroundTime);
+		hud.draw();
 		game.batch.end();
 
 		stage.draw();
@@ -168,10 +169,6 @@ public class GameScreen implements Screen{
 		//Test Box2DLight
 		rayHandler.setCombinedMatrix(camera);
 		rayHandler.updateAndRender();
-
-		System.out.println("camera.viewportWidth = " + camera.viewportWidth);
-		System.out.println("GameConstants.SCREEN_WIDTH = " + GameConstants.SCREEN_WIDTH);
-		System.out.println("levelPixelWidth = " + GameConstants.LEVEL_PIXEL_WIDTH);
 	}
 
 	@Override
@@ -198,7 +195,7 @@ public class GameScreen implements Screen{
 			    	
 			    	//Leak
 				    if (fixtureA.getUserData().equals("Leak") && fixtureB.getBody().getType() == BodyType.DynamicBody) {
-				    	for(Obstacle obstacle : mapReader.obstacles){
+				    	for(Obstacle obstacle : mapReader.leaks){
 				    		if(obstacle.body.getFixtureList().get(0) == fixtureA){
 				    			Leak leak = (Leak) obstacle;
 				    			leak.addBody(fixtureB);
@@ -206,7 +203,7 @@ public class GameScreen implements Screen{
 				    	}
 					} 
 				    else if (fixtureB.getUserData().equals("Leak") && fixtureA.getBody().getType() == BodyType.DynamicBody) {
-				    	for(Obstacle obstacle : mapReader.obstacles){
+				    	for(Obstacle obstacle : mapReader.leaks){
 				    		if(obstacle.body.getFixtureList().get(0) == fixtureB){
 				    			Leak leak = (Leak) obstacle;
 				    			leak.addBody(fixtureA);
@@ -252,7 +249,7 @@ public class GameScreen implements Screen{
 				if(fixtureA.getUserData() != null && fixtureB.getUserData() != null) {
 			    	//Leak
 				    if (fixtureA.getUserData().equals("Leak") && fixtureB.getBody().getType() == BodyType.DynamicBody) {
-				    	for(Obstacle obstacle : mapReader.obstacles){
+				    	for(Obstacle obstacle : mapReader.leaks){
 				    		if(obstacle.body.getFixtureList().get(0) == fixtureA){
 				    			Leak leak = (Leak) obstacle;
 				    			leak.removeBody(fixtureB);
@@ -260,7 +257,7 @@ public class GameScreen implements Screen{
 				    	}
 					} 
 				    else if (fixtureB.getUserData().equals("Leak") && fixtureA.getBody().getType() == BodyType.DynamicBody) {
-				    	for(Obstacle obstacle : mapReader.obstacles){
+				    	for(Obstacle obstacle : mapReader.leaks){
 				    		if(obstacle.body.getFixtureList().get(0) == fixtureB){
 				    			Leak leak = (Leak) obstacle;
 				    			leak.removeBody(fixtureA);

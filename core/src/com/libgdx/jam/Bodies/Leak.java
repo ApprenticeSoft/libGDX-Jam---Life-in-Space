@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
@@ -12,15 +13,17 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.libgdx.jam.MyGdxGame;
 import com.libgdx.jam.Utils.GameConstants;
 
 public class Leak extends Obstacle{
 
 	private Set<Fixture> fixtures;
 	private Vector2 leakForce, leakOrigin;
-	private float force, leakSize, leakAngle, leakScale;
+	private float force, leakSize, leakAngle, leakScale, leakSpeed;
+	private Animation leakAnimation;
 	
-	public Leak(World world, OrthographicCamera camera,	MapObject rectangleObject) {
+	public Leak(World world, OrthographicCamera camera,	MapObject rectangleObject, final MyGdxGame game) {
 		super(world, camera, rectangleObject);
 		create(world, camera, rectangleObject);
 		
@@ -38,6 +41,11 @@ public class Leak extends Obstacle{
 		}
 		else
 			force = GameConstants.DEFAULT_LEAK_FORCE;
+		
+		//Leak animation
+		leakSpeed = 0.3f * GameConstants.DEFAULT_LEAK_FORCE/Math.abs(force);
+		leakSpeed = MathUtils.clamp(leakSpeed, 0.01f, 0.1f);
+		leakAnimation = new Animation(leakSpeed, game.assets.get("Images/Leak_Animation.pack", TextureAtlas.class).findRegions("Leak_Animation"), Animation.PlayMode.LOOP);
 		
 		//Leak direction and leak origine
 		if(rectangle.width > rectangle.height){
@@ -92,10 +100,9 @@ public class Leak extends Obstacle{
 		}
 	}
 	
-	@Override
-	public void draw(SpriteBatch batch, TextureAtlas textureAtlas){		
+	public void draw(SpriteBatch batch, float animTime){		
 		batch.setColor(1, 1, 1, 1);
-		batch.draw(textureAtlas.findRegion("Leak"), 
+		batch.draw(leakAnimation.getKeyFrame(animTime), 
 				this.body.getPosition().x - width, 
 				this.body.getPosition().y - height,
 				width,

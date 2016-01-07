@@ -27,18 +27,19 @@ import com.libgdx.jam.Items.OxygenRefill;
 
 public class TiledMapReader {
 
-	private static OrthographicCamera camera;
-	private static World world;
+	//private static OrthographicCamera camera;
+	//private static World world;
     private MapObjects objects;
 	public Array<Obstacle> obstacles, obstaclesWithNinePatch;
+	public Array<Leak> leaks;
 	public Array<ItemSwitch> switchs;
 	public Array<Item> items;
 	private Array<MapObject> pistons;
 	public Hero hero;
     
 	public TiledMapReader(final MyGdxGame game, TiledMap tiledMap, World world, OrthographicCamera camera){
-		this.camera = camera;
-		this.world = world;
+		//this.camera = camera;
+		//this.world = world;
 			
 		hero = new Hero(game, world, camera, tiledMap);
 		
@@ -49,6 +50,7 @@ public class TiledMapReader {
         pistons = new Array<MapObject>();
         switchs = new Array<ItemSwitch>();
         items = new Array<Item>();
+        leaks = new Array<Leak>();
         
         for (RectangleMapObject rectangleObject : objects.getByType(RectangleMapObject.class)) {
         	if(rectangleObject.getProperties().get("Type") != null){
@@ -70,7 +72,6 @@ public class TiledMapReader {
             	//Pistons
             	else if(rectangleObject.getProperties().get("Type").equals("Piston")){
 	            	pistons.add(rectangleObject);
-	            	System.out.println("pistons.size" + pistons.size);
             	}
             	//Revolving obstacles
             	else if(rectangleObject.getProperties().get("Type").equals("Revolving")){
@@ -79,8 +80,9 @@ public class TiledMapReader {
             	}
             	//Leaks
             	else if(rectangleObject.getProperties().get("Type").equals("Leak")){
-	            	Leak leak = new Leak(world, camera, rectangleObject);
-	                obstacles.add(leak);
+	            	Leak leak = new Leak(world, camera, rectangleObject, game);
+	                //obstacles.add(leak);
+	                leaks.add(leak);
             	}
         	}
         	else{
@@ -142,20 +144,21 @@ public class TiledMapReader {
 	    	if(obstacles.get(i).getClass().toString().equals("class com.libgdx.jam.Bodies.ObstaclePiston")){
 	    		obstaclesWithNinePatch.add(obstacles.get(i));
 	    		obstacles.removeIndex(obstacles.indexOf(obstacles.get(i), true));
-	    		System.out.println("obstacles.size = " + obstacles.size);
 	    	}
 	    }
 	    for(int i = obstacles.size - 1; i > -1; i--){
 	    	if(obstacles.get(i).getClass().toString().equals("class com.libgdx.jam.Bodies.Wall")){
 	    		obstaclesWithNinePatch.add(obstacles.get(i));
 	    		obstacles.removeIndex(obstacles.indexOf(obstacles.get(i), true));
-	    		System.out.println("obstacles.size = " + obstacles.size);
 	    	}
 	    }
 	}
 	
 	public void active(){
 		hero.displacement();
+        
+        for(Leak leak : leaks)
+        	leak.active();
 		
         for(Obstacle obstacle : obstacles)
         	obstacle.active();
@@ -163,7 +166,7 @@ public class TiledMapReader {
         for(Obstacle obstacle : obstaclesWithNinePatch)
         	obstacle.active();
         
-        for(Item item: items)
+        for(Item item : items)
         	item.active(this);
 	}
 }

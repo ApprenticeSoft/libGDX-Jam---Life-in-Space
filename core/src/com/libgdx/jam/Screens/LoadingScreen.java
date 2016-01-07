@@ -46,6 +46,7 @@ public class LoadingScreen implements Screen{
 		//Loading of the TextureAtlas
 		game.assets.load("Images/Images.pack", TextureAtlas.class);
 		game.assets.load("Images/Tom_Animation.pack", TextureAtlas.class);
+		game.assets.load("Images/Leak_Animation.pack", TextureAtlas.class);
 		
 		//Loading of the Freetype Fonts
 		FileHandleResolver resolver = new InternalFileHandleResolver();

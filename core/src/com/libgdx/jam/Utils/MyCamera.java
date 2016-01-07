@@ -1,11 +1,11 @@
 package com.libgdx.jam.Utils;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.libgdx.jam.Bodies.Hero;
 
@@ -56,22 +56,34 @@ public class MyCamera extends  OrthographicCamera{
 		
 
 		//Zoom-in/Zoom-out
-		if (Gdx.input.isKeyPressed(Keys.Z)) {
+		if (Gdx.input.isKeyPressed(Input.Keys.O)) {
             viewportWidth *= 1.01f;
             viewportHeight *= 1.01f;
+            zoomLimit();
         }
-		else if (Gdx.input.isKeyPressed(Keys.X)) {
+		else if (Gdx.input.isKeyPressed(Input.Keys.P)) {
             viewportWidth *= 0.99f;
             viewportHeight *= 0.99f;
-        }
+            zoomLimit();
+        }		
+	}
+	
+	public void zoomLimit(){
 		if(viewportWidth > GameConstants.LEVEL_PIXEL_WIDTH){
 			viewportWidth = GameConstants.LEVEL_PIXEL_WIDTH;
+			viewportHeight = viewportWidth * GameConstants.SCREEN_RATIO;
+		}
+		else if(viewportWidth < GameConstants.SCREEN_WIDTH/2){
+			viewportWidth = GameConstants.SCREEN_WIDTH/2;
 			viewportHeight = viewportWidth * GameConstants.SCREEN_RATIO;
 		}
 		else if(viewportHeight > GameConstants.LEVEL_PIXEL_HEIGHT){
 			viewportHeight = GameConstants.LEVEL_PIXEL_HEIGHT;
 			viewportWidth = viewportHeight / GameConstants.SCREEN_RATIO;
 		}
-		
+		else if(viewportHeight < GameConstants.SCREEN_HEIGHT/2){
+			viewportHeight = GameConstants.SCREEN_HEIGHT/2;
+			viewportWidth = viewportHeight / GameConstants.SCREEN_RATIO;
+		}
 	}
 }
