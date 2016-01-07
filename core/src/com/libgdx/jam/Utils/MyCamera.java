@@ -1,6 +1,7 @@
 package com.libgdx.jam.Utils;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Interpolation;
@@ -52,6 +53,25 @@ public class MyCamera extends  OrthographicCamera{
 			position.set(position.x, ((float)(tiledMap.getProperties().get("height", Integer.class)*GameConstants.PPT))*GameConstants.MPP - viewportHeight/2, 0);
 		else if(position.y - viewportHeight/2 < 0)
 			position.set(position.x, viewportHeight/2, 0);	
+		
+
+		//Zoom-in/Zoom-out
+		if (Gdx.input.isKeyPressed(Keys.Z)) {
+            viewportWidth *= 1.01f;
+            viewportHeight *= 1.01f;
+        }
+		else if (Gdx.input.isKeyPressed(Keys.X)) {
+            viewportWidth *= 0.99f;
+            viewportHeight *= 0.99f;
+        }
+		if(viewportWidth > GameConstants.LEVEL_PIXEL_WIDTH){
+			viewportWidth = GameConstants.LEVEL_PIXEL_WIDTH;
+			viewportHeight = viewportWidth * GameConstants.SCREEN_RATIO;
+		}
+		else if(viewportHeight > GameConstants.LEVEL_PIXEL_HEIGHT){
+			viewportHeight = GameConstants.LEVEL_PIXEL_HEIGHT;
+			viewportWidth = viewportHeight / GameConstants.SCREEN_RATIO;
+		}
 		
 	}
 }

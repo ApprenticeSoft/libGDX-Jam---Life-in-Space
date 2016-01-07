@@ -39,31 +39,5 @@ public class GameConstants {
 	//Game variables (Yeah, I know, this is the GameConstants.java)
 	public static boolean GAME_PAUSED = false;
 	public static float ANIM_TIME = 0;
-	
-	//Graphismes
-	public static float ombresX = (float)Gdx.graphics.getWidth()/800;
-	public static float ombresY =  - (float)Gdx.graphics.getHeight()/400;
-	
-	//Gestion des niveaux
-	public static int nombreNiveaux = 25;
-	public static int niveauSelectione = 1;
-	public static float objectif = 70;
-	public static int couleurSelectionee = 1;
-	
-	public static boolean début = true;
-	public static boolean pause = true;
-	public static boolean perdu = true;
-	public static boolean gagné = true;
-	public static int INTERSTITIAL_TRIGGER = 2;
-	
-	//Gestion des barres
-	public static boolean spawn = false;
-	public static float largeurBordure; 
-	public static float posBordure = 0.05f;
-	
-	//Liens vers les App Store
-	public static final String GOOGLE_PLAY_GAME_URL = "https://play.google.com/store/apps/details?id=com.minimal.jezz.android";
-	public static final String GOOGLE_PLAY_STORE_URL = "https://play.google.com/store/apps/developer?id=Apprentice+Soft";
-	public static final String AMAZON_GAME_URL = "http://www.amazon.com/gp/mas/dl/android?p=com.minimal.jezz.android";
-	public static final String AMAZON_STORE_URL = "http://www.amazon.com/gp/mas/dl/android?p=com.premier.jeu.android&showAll=1";
+	public static float LEVEL_PIXEL_WIDTH, LEVEL_PIXEL_HEIGHT;
 }

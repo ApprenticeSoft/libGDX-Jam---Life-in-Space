@@ -57,7 +57,7 @@ public class GameScreen implements Screen{
     
     //Background
     private Texture backgroundTexture;
-    private float levelPixelWidth, levelPixelHeight, backgroundTime;
+    private float backgroundTime;
     
 	private RayHandler rayHandler;
 	
@@ -91,8 +91,8 @@ public class GameScreen implements Screen{
 		backgroundTexture = new Texture(Gdx.files.internal("Images/Stars.jpg"), true);
 		backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         
-        levelPixelWidth = Float.parseFloat(tiledMap.getProperties().get("width").toString()) * GameConstants.PPT * GameConstants.MPP;
-        levelPixelHeight = Float.parseFloat(tiledMap.getProperties().get("height").toString()) * GameConstants.PPT * GameConstants.MPP;	
+        GameConstants.LEVEL_PIXEL_WIDTH = Float.parseFloat(tiledMap.getProperties().get("width").toString()) * GameConstants.PPT * GameConstants.MPP;
+        GameConstants.LEVEL_PIXEL_HEIGHT = Float.parseFloat(tiledMap.getProperties().get("height").toString()) * GameConstants.PPT * GameConstants.MPP;	
         
         //Test Box2DLight
         rayHandler = new RayHandler(world); 
@@ -138,12 +138,12 @@ public class GameScreen implements Screen{
 		game.batch.draw(backgroundTexture, 
 				0, 
 				0, 
-				levelPixelWidth, 
-				levelPixelHeight,  
+				GameConstants.LEVEL_PIXEL_WIDTH, 
+				GameConstants.LEVEL_PIXEL_HEIGHT,  
 				(int)(backgroundTime * 8), 
 				0, 
-				(int)(levelPixelWidth * 20), 
-				(int)(levelPixelHeight * 20), 
+				(int)(GameConstants.LEVEL_PIXEL_WIDTH * 20), 
+				(int)(GameConstants.LEVEL_PIXEL_HEIGHT * 20), 
 				false, 
 				false);
 		game.batch.end();
@@ -168,13 +168,10 @@ public class GameScreen implements Screen{
 		//Test Box2DLight
 		rayHandler.setCombinedMatrix(camera);
 		rayHandler.updateAndRender();
-		
-		if (Gdx.input.isKeyPressed(Keys.Z)) {
-            camera.zoom += 0.02;
-        }
-        if (Gdx.input.isKeyPressed(Keys.X)) {
-            camera.zoom -= 0.02;
-        }
+
+		System.out.println("camera.viewportWidth = " + camera.viewportWidth);
+		System.out.println("GameConstants.SCREEN_WIDTH = " + GameConstants.SCREEN_WIDTH);
+		System.out.println("levelPixelWidth = " + GameConstants.LEVEL_PIXEL_WIDTH);
 	}
 
 	@Override
