@@ -1,6 +1,8 @@
 package com.libgdx.jam.Bodies;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -9,11 +11,16 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 public class ObstacleDoor extends Obstacle{
 	
 	private float speed = 5;
+	private float doorAngle, doorScale;
 	private Vector2 initialPosition, finalPosition;
 
 	public ObstacleDoor(World world, OrthographicCamera camera,	MapObject rectangleObject) {
 		super(world, camera, rectangleObject);
 		create(world, camera, rectangleObject);
+		
+		stringTextureRegion = "Door";
+		
+		doorScale = 1;
 		
 		//Motion speed
 		if(rectangleObject.getProperties().get("Speed") != null){
@@ -22,10 +29,15 @@ public class ObstacleDoor extends Obstacle{
 		
 		initialPosition = new Vector2(posX, posY);
 		
-		if(width > height)
+		if(width > height){
 			finalPosition = new Vector2(posX + Math.signum(speed) * 1.9f*width, posY);
-		else
+			doorAngle = 0;
+		}
+		else{
 			finalPosition = new Vector2(posX, posY + Math.signum(speed) * 1.9f*height);
+			doorAngle = 90;
+			doorScale = height/width;
+		}
 	}
 	
 	@Override
@@ -48,5 +60,20 @@ public class ObstacleDoor extends Obstacle{
 	@Override
 	public void activate(){
 		active = !active;
+	}
+	
+	@Override
+	public void draw(SpriteBatch batch, TextureAtlas textureAtlas){		
+		batch.setColor(1, 1, 1, 1);
+		batch.draw(textureAtlas.findRegion(stringTextureRegion), 
+				this.body.getPosition().x - width, 
+				this.body.getPosition().y - height,
+				width,
+				height,
+				2 * width,
+				2 * height,
+				doorScale,
+				1/doorScale,
+				doorAngle);
 	}
 }

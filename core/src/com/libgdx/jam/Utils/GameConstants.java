@@ -10,7 +10,7 @@ public class GameConstants {
 	public static int BOX_VELOCITY_ITERATIONS = 6;
 	public static int BOX_POSITION_ITERATIONS = 2;
 	public static float GRAVITY = 0;
-	public static float DENSITY = 1.0f;
+	public static float DENSITY = 2.0f;
 	
 	//Tiled Map constants
 	public static int PPT = 100;					//Pixel/Tile
@@ -22,7 +22,7 @@ public class GameConstants {
 	public static float SCREEN_HEIGHT = SCREEN_WIDTH * SCREEN_RATIO;
 	
 	//Hero constants
-	public static float HERO_HEIGHT = 0.55f *  PPT * MPP / 2;
+	public static float HERO_HEIGHT = 0.6f *  PPT * MPP / 2;
 	public static float HERO_WIDTH = 35 * HERO_HEIGHT / 100;
 	public static float JETPACK_IMPULSE = 100;
 	public static float TOM_ROTATION = 5;
@@ -37,6 +37,7 @@ public class GameConstants {
 	public static float OXYGEN_REFILL = 30f;
 	
 	//Game variables (Yeah, I know, this is the GameConstants.java)
+	public static boolean LEVEL_FINISHED = false;
 	public static boolean GAME_PAUSED = false;
 	public static float ANIM_TIME = 0;
 	public static float LEVEL_PIXEL_WIDTH, LEVEL_PIXEL_HEIGHT;

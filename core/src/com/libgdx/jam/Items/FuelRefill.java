@@ -12,6 +12,8 @@ public class FuelRefill extends Item{
 	
 	public FuelRefill(World world,  OrthographicCamera camera, MapObject mapObject, Hero hero){
 		this.hero = hero;
+
+		stringTextureRegion = "FuelRefill";
 		
 		create(world, camera, mapObject);	
 	}

@@ -13,6 +13,8 @@ public class OxygenRefill extends Item{
 	public OxygenRefill(World world,  OrthographicCamera camera, MapObject mapObject, Hero hero){
 		this.hero = hero;
 		
+		stringTextureRegion = "OxygenRefill";
+		
 		create(world, camera, mapObject);		
 	}
 	

@@ -63,6 +63,7 @@ public class GameScreen implements Screen{
 	public GameScreen(final MyGdxGame game){
 		this.game= game;
 		
+		GameConstants.LEVEL_FINISHED = false;
 		GameConstants.GAME_PAUSED = false;
 		GameConstants.ANIM_TIME = 0;
 		
@@ -86,7 +87,8 @@ public class GameScreen implements Screen{
 		skin.addRegions(textureAtlas);
         hud = new HUD(game, stage, skin, mapReader.hero);
 
-        //Background		
+        //Background
+        
 		backgroundTexture = new Texture(Gdx.files.internal("Images/Stars.jpg"), true);
 		backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         
@@ -112,6 +114,10 @@ public class GameScreen implements Screen{
         //Animation
         GameConstants.ANIM_TIME += Gdx.graphics.getDeltaTime();
         backgroundTime += Gdx.graphics.getDeltaTime();
+        
+        //Level finished
+        if(GameConstants.LEVEL_FINISHED)
+        	hud.win();
         
 		if(!GameConstants.GAME_PAUSED){     		
 	        if(Gdx.input.isKeyPressed(Keys.ESCAPE)){
@@ -153,14 +159,7 @@ public class GameScreen implements Screen{
 		    
 		//HUD and hero
 		game.batch.begin();
-		for(Obstacle obstacle : mapReader.obstaclesWithNinePatch)
-			obstacle.draw(game.batch);
-		for(Obstacle obstacle : mapReader.obstacles)
-			obstacle.draw(game.batch, textureAtlas);
-		//game.batch.setColor(1, 1, 1, 1);
-		mapReader.hero.draw(game.batch, GameConstants.ANIM_TIME);
-		for(Leak leak : mapReader.leaks)
-			leak.draw(game.batch, backgroundTime);
+		mapReader.draw(game.batch, textureAtlas, backgroundTime);
 		hud.draw();
 		game.batch.end();
 
@@ -179,19 +178,19 @@ public class GameScreen implements Screen{
 		world.setContactListener(new ContactListener(){
 			@Override
 			public void beginContact(Contact contact) {
-				Body bodyA = contact.getFixtureA().getBody();
-			    Body bodyB = contact.getFixtureB().getBody();
 				Fixture fixtureA = contact.getFixtureA();
 				Fixture fixtureB = contact.getFixtureB();
 			    
 			    if(fixtureA.getUserData() != null && fixtureB.getUserData() != null) {
 			    	//Finish the level
-			    	if(fixtureA.getUserData().equals("Tom") && fixtureB.getUserData().equals("Exit"))
-			    		hud.win();
-			    		//System.out.println("LEVEL FINISHED !!!!");
-			    	else if(fixtureB.getUserData().equals("Tom") && fixtureA.getUserData().equals("Exit"))
-			    		hud.win();
-				    	//System.out.println("LEVEL FINISHED !!!!");
+			    	if(fixtureA.getUserData().equals("Tom") && fixtureB.getUserData().equals("Exit")){
+			    		mapReader.exit.open = true;
+			    		mapReader.exit.heroContact = true;
+			    	}    		
+			    	else if(fixtureB.getUserData().equals("Tom") && fixtureA.getUserData().equals("Exit")){
+			    		mapReader.exit.open = true;
+			    		mapReader.exit.heroContact = true;
+			    	}    
 			    	
 			    	//Leak
 				    if (fixtureA.getUserData().equals("Leak") && fixtureB.getBody().getType() == BodyType.DynamicBody) {
@@ -264,6 +263,13 @@ public class GameScreen implements Screen{
 				    		}
 				    	}
 					}
+			    	//Finish the level
+			    	if(fixtureA.getUserData().equals("Tom") && fixtureB.getUserData().equals("Exit")){
+			    		mapReader.exit.heroContact = false;
+			    	}    		
+			    	else if(fixtureB.getUserData().equals("Tom") && fixtureA.getUserData().equals("Exit")){
+			    		mapReader.exit.heroContact = false;
+			    	}  
 				}
 			}
 

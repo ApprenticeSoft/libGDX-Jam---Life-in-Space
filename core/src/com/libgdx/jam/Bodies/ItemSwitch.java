@@ -1,7 +1,10 @@
 package com.libgdx.jam.Bodies;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -42,8 +45,8 @@ public class ItemSwitch {
 			associationNumbers = mapObject.getProperties().get("Association Number").toString().split(",");
 		}
 		
-		width = mapObject.getProperties().get("width", float.class)/2 * GameConstants.MPP;
-		height = mapObject.getProperties().get("height", float.class)/2 * GameConstants.MPP;
+		width = 0.25f * mapObject.getProperties().get("width", float.class)/2 * GameConstants.MPP;
+		height = 0.25f * mapObject.getProperties().get("height", float.class)/2 * GameConstants.MPP;
 		
 		bodyDef = new BodyDef();
 		fixtureDef = new FixtureDef();
@@ -74,6 +77,24 @@ public class ItemSwitch {
 			for(Obstacle obstacle : obstacles)
 				if(obstacle.associationNumber == Integer.valueOf(number))
 					obstacle.activate();
+		}
+	}
+	
+	public void draw(SpriteBatch batch, TextureAtlas textureAtlas){
+		batch.setColor(1, 1, 1, 1);
+		if(isOn){
+			batch.draw(textureAtlas.findRegion("SwitchOn"),
+					this.swtichBody.getPosition().x - width, 
+					this.swtichBody.getPosition().y - height,
+					2 * width,
+					2 * height); 
+		}
+		else{
+			batch.draw(textureAtlas.findRegion("SwitchOff"),
+					this.swtichBody.getPosition().x - width, 
+					this.swtichBody.getPosition().y - height,
+					2 * width,
+					2 * height); 
 		}
 	}
 }

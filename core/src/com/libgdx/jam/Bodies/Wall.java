@@ -13,7 +13,7 @@ public class Wall extends Obstacle{
 		super(world, camera, rectangleObject, textureAtlas);	
 		create(world, camera, rectangleObject);
 
-		ninePatch = new NinePatch(textureAtlas.findRegion("WallLarge2"), 49, 49, 49, 49);
+		ninePatch = new NinePatch(textureAtlas.findRegion("Wall"), 49, 49, 49, 49);
 		ninePatch.scale(0.5f*GameConstants.MPP, 0.5f*GameConstants.MPP);
 	}
 }

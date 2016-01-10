@@ -60,7 +60,7 @@ public class Hero {
 		bodyWidth = GameConstants.HERO_WIDTH;
 		bodyHeight = GameConstants.HERO_HEIGHT;
 		posXInit = (personnages.get("Tom").getProperties().get("x", float.class) + personnages.get("Tom").getProperties().get("width", float.class)/2) * GameConstants.MPP;
-		posYInit = (personnages.get("Tom").getProperties().get("y", float.class) + personnages.get("Tom").getProperties().get("height", float.class)/2) * GameConstants.MPP;
+		posYInit = (personnages.get("Tom").getProperties().get("y", float.class) + 3*personnages.get("Tom").getProperties().get("height", float.class)/2) * GameConstants.MPP;
 		
 		heroShape = new PolygonShape();
 		heroShape.setAsBox(bodyWidth, bodyHeight);
@@ -85,7 +85,7 @@ public class Hero {
         //Animation
         tomAtlas = game.assets.get("Images/Tom_Animation.pack", TextureAtlas.class);
         tomIdle = new Animation(0.1f, tomAtlas.findRegions("Tom_Idle"), Animation.PlayMode.LOOP);
-        tomFly = new Animation(0.1f, tomAtlas.findRegions("Tom_Fly"), Animation.PlayMode.NORMAL);
+        tomFly = new Animation(0.05f, tomAtlas.findRegions("Tom_Fly"), Animation.PlayMode.NORMAL);
         
         spriteHeight = 2 * bodyHeight;
         spriteWidth = spriteHeight * tomIdle.getKeyFrame(0, true).getRegionWidth()  / tomIdle.getKeyFrame(0, true).getRegionHeight();

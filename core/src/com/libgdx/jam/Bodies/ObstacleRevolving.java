@@ -14,6 +14,8 @@ public class ObstacleRevolving extends Obstacle{
 		super(world, camera, rectangleObject);
 		create(world, camera, rectangleObject);
 		
+		stringTextureRegion = "RevolvingObject";
+		
 		//Rotation speed
 		if(rectangleObject.getProperties().get("Speed") != null)
 			speed = Float.parseFloat((String) rectangleObject.getProperties().get("Speed"));
@@ -28,7 +30,7 @@ public class ObstacleRevolving extends Obstacle{
 	}
 	
 	@Override
-	public void activate(){
+	public void activate(){	
 		active = !active;
 		
 		if(active)

@@ -1,6 +1,8 @@
 package com.libgdx.jam.Bodies;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -17,9 +19,14 @@ public class ObstacleMoving extends Obstacle{
 	private Vector2 direction;
 	private Vector2[] path;
 	private int step;
+	private float widthFactor = 1;
+	private float heightFactor = 1;
 	
-	public ObstacleMoving(World world, OrthographicCamera camera, PolylineMapObject polylineObject) {
+	public ObstacleMoving(World world, OrthographicCamera camera, PolylineMapObject polylineObject, TextureAtlas textureAtlas) {
 		super(world, camera, polylineObject);
+		
+		ninePatch = new NinePatch(textureAtlas.findRegion("MovingObstacle"), 49, 49, 49, 49);
+		//ninePatch.scale(0.5f*GameConstants.MPP, 0.5f*GameConstants.MPP);
 		
 		//SPEED
 		if(polylineObject.getProperties().get("Speed") != null)
@@ -31,17 +38,28 @@ public class ObstacleMoving extends Obstacle{
 			loop = true;
 		else loop = false;
 		
-		//WIDTH OF THE MOVING OBJECT
+		//WIDTH OF THE MOVING OBJECT		
 		if(polylineObject.getProperties().get("Width") != null)
-			width = Integer.parseInt((String) polylineObject.getProperties().get("Width")) * GameConstants.PPT * GameConstants.MPP/2;
-		else
-			width = 2 * GameConstants.PPT * GameConstants.MPP/2;
+			widthFactor = Float.parseFloat((String) polylineObject.getProperties().get("Width"));
+		
+		width = GameConstants.PPT * GameConstants.MPP/2;
+		width *= widthFactor;
 		
 		//HEIGHT OF THE MOVING OBJECT
 		if(polylineObject.getProperties().get("Height") != null)
-			height = Integer.parseInt((String) polylineObject.getProperties().get("Height")) * GameConstants.PPT * GameConstants.MPP/2;
+			heightFactor = Float.parseFloat((String) polylineObject.getProperties().get("Height"));
+		
+		height = GameConstants.PPT * GameConstants.MPP/2;
+		height *= heightFactor;
+		
+		//Scaling of the NinePatch
+		if(width > height && height >= 1){
+			ninePatch.scale(heightFactor * 0.5f*GameConstants.MPP, heightFactor * 0.5f*GameConstants.MPP);
+		}
+		else if(height >= width && width >= 1)
+			ninePatch.scale(widthFactor * 0.5f*GameConstants.MPP, widthFactor * 0.5f*GameConstants.MPP);
 		else
-			height = 2 * GameConstants.PPT * GameConstants.MPP/2;
+			ninePatch.scale(0.5f*GameConstants.MPP, 0.5f*GameConstants.MPP);
 		
 		path = new Vector2[polylineObject.getPolyline().getTransformedVertices().length/2];
     	for(int i = 0; i < path.length; i++){

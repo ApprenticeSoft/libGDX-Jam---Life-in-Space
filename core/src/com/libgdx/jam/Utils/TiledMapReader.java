@@ -1,6 +1,9 @@
 package com.libgdx.jam.Utils;
 
+import java.util.Iterator;
+
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
@@ -35,7 +38,9 @@ public class TiledMapReader {
 	public Array<ItemSwitch> switchs;
 	public Array<Item> items;
 	private Array<MapObject> pistons;
+	private Array<Exit> exits;
 	public Hero hero;
+	public Exit exit;
     
 	public TiledMapReader(final MyGdxGame game, TiledMap tiledMap, World world, OrthographicCamera camera){
 		//this.camera = camera;
@@ -51,13 +56,14 @@ public class TiledMapReader {
         switchs = new Array<ItemSwitch>();
         items = new Array<Item>();
         leaks = new Array<Leak>();
-        
+        exits = new Array<Exit>();
+ 
         for (RectangleMapObject rectangleObject : objects.getByType(RectangleMapObject.class)) {
         	if(rectangleObject.getProperties().get("Type") != null){
         		//End of the level
         		if(rectangleObject.getProperties().get("Type").equals("Exit")){
-        			Exit finish = new Exit(world, camera, rectangleObject);
-                    obstacles.add(finish);
+        			exit = new Exit(world, camera, rectangleObject, game);
+                    exits.add(exit);
         		}
         		//Light obstacles
         		else if(rectangleObject.getProperties().get("Type").equals("Light")){
@@ -113,7 +119,7 @@ public class TiledMapReader {
         
         //Moving obstacles     
         for(PolylineMapObject polylineObject : objects.getByType(PolylineMapObject.class)){
-        	ObstacleMoving obstacleMoving = new ObstacleMoving(world, camera, polylineObject);
+        	ObstacleMoving obstacleMoving = new ObstacleMoving(world, camera, polylineObject, game.assets.get("Images/Images.pack", TextureAtlas.class));
         	obstacles.add(obstacleMoving); 	
         }
               
@@ -147,6 +153,12 @@ public class TiledMapReader {
 	    	}
 	    }
 	    for(int i = obstacles.size - 1; i > -1; i--){
+	    	if(obstacles.get(i).getClass().toString().equals("class com.libgdx.jam.Bodies.ObstacleMoving")){
+	    		obstaclesWithNinePatch.add(obstacles.get(i));
+	    		obstacles.removeIndex(obstacles.indexOf(obstacles.get(i), true));
+	    	}
+	    }
+	    for(int i = obstacles.size - 1; i > -1; i--){
 	    	if(obstacles.get(i).getClass().toString().equals("class com.libgdx.jam.Bodies.Wall")){
 	    		obstaclesWithNinePatch.add(obstacles.get(i));
 	    		obstacles.removeIndex(obstacles.indexOf(obstacles.get(i), true));
@@ -168,5 +180,24 @@ public class TiledMapReader {
         
         for(Item item : items)
         	item.active(this);
+        
+        for(Exit exit : exits)
+        	exit.active();
+	}
+	
+	public void draw(SpriteBatch batch, TextureAtlas textureAtlas, float animTime){    
+        for(Exit exit : exits)
+        	exit.draw(batch);
+		for(ItemSwitch itemSwitch : switchs)
+			itemSwitch.draw(batch, textureAtlas);
+        for(Item item : items)
+        	item.draw(batch, textureAtlas);
+		for(Obstacle obstacle : obstacles)
+			obstacle.draw(batch, textureAtlas);
+		for(Obstacle obstacle : obstaclesWithNinePatch)
+			obstacle.draw(batch);
+		hero.draw(batch, GameConstants.ANIM_TIME);
+		for(Leak leak : leaks)
+			leak.draw(batch, animTime);
 	}
 }

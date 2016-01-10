@@ -26,22 +26,18 @@ public class Obstacle {
 	protected PolygonShape polygonShape;
 	protected Rectangle rectangle;
 	public float posX, posY, width, height, angle;
-	OrthographicCamera camera;
+	//OrthographicCamera camera;
 	public int associationNumber;
 	public boolean active;
 	
-	//Ninepatch
-	NinePatch ninePatch;
+	//Graphs
+	protected NinePatch ninePatch;
+	protected String stringTextureRegion;
 	
-	public Obstacle(World world, OrthographicCamera camera, MapObject rectangleObject){		
-		//create(world, camera, rectangleObject);     
+	public Obstacle(World world, OrthographicCamera camera, MapObject rectangleObject){	
 	}
 	
 	public Obstacle(World world, OrthographicCamera camera, MapObject rectangleObject, TextureAtlas textureAtlas){		
-		//create(world, camera, rectangleObject);     
-
-		//ninePatch = new NinePatch(textureAtlas.findRegion("WallLarge2"), 49, 49, 49, 49);
-		//ninePatch.scale(0.5f*GameConstants.MPP, 0.5f*GameConstants.MPP);
 	}
 	
 	public Obstacle(World world, OrthographicCamera camera, PolylineMapObject polylineObject){
@@ -51,9 +47,11 @@ public class Obstacle {
 	public void create(World world, OrthographicCamera camera, MapObject rectangleObject){
 		setInitialState(rectangleObject);
 		
+		stringTextureRegion = "WhiteSquare";
+		
 		rectangle = ((RectangleMapObject) rectangleObject).getRectangle();
 			
-		this.camera = camera;
+		//this.camera = camera;
 		this.posX = (rectangle.x + rectangle.width/2) * GameConstants.MPP;
 		this.posY = (rectangle.y + rectangle.height/2) * GameConstants.MPP;
 		this.width = (rectangle.width/2) * GameConstants.MPP;
@@ -152,8 +150,8 @@ public class Obstacle {
 	}
 	
 	public void draw(SpriteBatch batch, TextureAtlas textureAtlas){		
-		batch.setColor(0, 0, 0.1f, 1);
-		batch.draw(textureAtlas.findRegion("WhiteSquare"), 
+		batch.setColor(1, 1, 1, 1);
+		batch.draw(textureAtlas.findRegion(stringTextureRegion), 
 				this.body.getPosition().x - width, 
 				this.body.getPosition().y - height,
 				width,
