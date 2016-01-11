@@ -1,7 +1,5 @@
 package com.libgdx.jam.Utils;
 
-import java.util.Iterator;
-
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -29,9 +27,7 @@ import com.libgdx.jam.Items.Item;
 import com.libgdx.jam.Items.OxygenRefill;
 
 public class TiledMapReader {
-
-	//private static OrthographicCamera camera;
-	//private static World world;
+	
     private MapObjects objects;
 	public Array<Obstacle> obstacles, obstaclesWithNinePatch;
 	public Array<Leak> leaks;
@@ -43,8 +39,6 @@ public class TiledMapReader {
 	public Exit exit;
     
 	public TiledMapReader(final MyGdxGame game, TiledMap tiledMap, World world, OrthographicCamera camera){
-		//this.camera = camera;
-		//this.world = world;
 			
 		hero = new Hero(game, world, camera, tiledMap);
 		
@@ -87,7 +81,6 @@ public class TiledMapReader {
             	//Leaks
             	else if(rectangleObject.getProperties().get("Type").equals("Leak")){
 	            	Leak leak = new Leak(world, camera, rectangleObject, game);
-	                //obstacles.add(leak);
 	                leaks.add(leak);
             	}
         	}
@@ -170,17 +163,13 @@ public class TiledMapReader {
 		hero.displacement();
         
         for(Leak leak : leaks)
-        	leak.active();
-		
+        	leak.active();		
         for(Obstacle obstacle : obstacles)
         	obstacle.active();
-
         for(Obstacle obstacle : obstaclesWithNinePatch)
-        	obstacle.active();
-        
+        	obstacle.active();       
         for(Item item : items)
-        	item.active(this);
-        
+        	item.active(this);        
         for(Exit exit : exits)
         	exit.active();
 	}

@@ -91,9 +91,6 @@ public class Obstacle {
         }
         
         polygonShape.dispose();  
-        
-
-		System.out.println("body.getPosition().x = " + body.getPosition().x + " || body.getPosition().y = " + body.getPosition().y);
 	}
 	
 	public float getWidth(){

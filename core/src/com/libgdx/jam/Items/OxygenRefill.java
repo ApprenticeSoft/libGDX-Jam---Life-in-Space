@@ -23,7 +23,7 @@ public class OxygenRefill extends Item{
 		used = true;
 		
 		System.out.println("Oxygen level before refill : " + hero.getOxygenLevel());
-		hero.setOxygenLevel(hero.getFuelLevel() + GameConstants.OXYGEN_REFILL);
+		hero.setOxygenLevel(hero.getOxygenLevel() + GameConstants.OXYGEN_REFILL);
 		
 		if(hero.getOxygenLevel() > GameConstants.MAX_OXYGEN)
 			hero.setOxygenLevel(GameConstants.MAX_OXYGEN);

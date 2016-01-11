@@ -41,4 +41,6 @@ public class GameConstants {
 	public static boolean GAME_PAUSED = false;
 	public static float ANIM_TIME = 0;
 	public static float LEVEL_PIXEL_WIDTH, LEVEL_PIXEL_HEIGHT;
+	public static int NUMBER_OF_LEVEL = 15;
+	public static int SELECTED_LEVEL = 1;
 }

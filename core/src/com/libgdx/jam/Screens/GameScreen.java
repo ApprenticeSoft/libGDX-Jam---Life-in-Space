@@ -24,6 +24,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.libgdx.jam.Data;
 import com.libgdx.jam.MyGdxGame;
 import com.libgdx.jam.Bodies.ItemSwitch;
 import com.libgdx.jam.Bodies.Leak;
@@ -75,7 +76,7 @@ public class GameScreen implements Screen{
         World.setVelocityThreshold(0.0f);
         debugRenderer = new Box2DDebugRenderer();
         
-        tiledMap = new TmxMapLoader().load("Levels/Level 3.tmx");
+        tiledMap = new TmxMapLoader().load("Levels/Level " + GameConstants.SELECTED_LEVEL + ".tmx");
         tiledMapRenderer = new OrthogonalTiledMapRendererWithSprites(tiledMap, GameConstants.MPP, game.batch);
 
         mapReader = new TiledMapReader(game, tiledMap, world, camera); 
@@ -110,22 +111,23 @@ public class GameScreen implements Screen{
         camera.displacement(mapReader.hero, tiledMap);
         camera.update();      
         tiledMapRenderer.setView(camera);  
-
-        //Animation
-        GameConstants.ANIM_TIME += Gdx.graphics.getDeltaTime();
-        backgroundTime += Gdx.graphics.getDeltaTime();
         
         //Level finished
-        if(GameConstants.LEVEL_FINISHED)
-        	hud.win();
+        if(GameConstants.LEVEL_FINISHED){
+        	finishLevel();
+        }
         
-		if(!GameConstants.GAME_PAUSED){     		
-	        if(Gdx.input.isKeyPressed(Keys.ESCAPE)){
-	        	hud.pause();
-	        }
+		if(!GameConstants.GAME_PAUSED){     	
+	        //Animation
+	        GameConstants.ANIM_TIME += Gdx.graphics.getDeltaTime();
+	        backgroundTime += Gdx.graphics.getDeltaTime();
 	        
 			world.step(GameConstants.BOX_STEP, GameConstants.BOX_VELOCITY_ITERATIONS, GameConstants.BOX_POSITION_ITERATIONS);
 			mapReader.active();
+	        
+	        if(Gdx.input.isKeyPressed(Keys.ESCAPE)){
+	        	hud.pause();
+	        }
 	        
 	        if(mapReader.hero.getOxygenLevel() <= 0){
 	        	hud.loseString = "OUT OF OXYGEN !";
@@ -303,31 +305,33 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void dispose() {
 		stage.dispose();			
+	}
+	
+	public void finishLevel(){
+    	if(GameConstants.SELECTED_LEVEL == GameConstants.NUMBER_OF_LEVEL)
+    		hud.gameComplete();
+    	else{
+    		hud.win();
+    		if(GameConstants.SELECTED_LEVEL == Data.getLevel())
+    			Data.setLevel(Data.getLevel() + 1);
+    	}
 	}
 
 }

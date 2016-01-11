@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.libgdx.jam.MyGdxGame;
 import com.libgdx.jam.Bodies.Hero;
 import com.libgdx.jam.Screens.GameScreen;
@@ -26,11 +27,11 @@ public class HUD {
 	public Image OxygenBar, FuelBar;
 	private float posXOxygen, posYOxygen, width, height, outOfFuelAlpha;
 	private Hero hero;
-	private Table tableWin, tableLose, tablePause;
+	private Table tableWin, tableLose, tablePause, tableGameComplete;
 	private TextButtonStyle textButtonStyle;
-	private TextButton nextButton, replayButton, replayButton2, replayButton3, menuButton, menuButton2, resumeButton;
+	private TextButton nextButton, replayButton, replayButton2, replayButton3, menuButton, menuButton2, menuButton3, resumeButton;
 	private LabelStyle menulabelStyle, hudLabelStyle;
-	private Label outOfFuelLabel, loseLabel, oxygenLabel, fuelLabel;
+	private Label outOfFuelLabel, loseLabel, oxygenLabel, fuelLabel, gameCompleteLabel;
 	private Image imageTableBackground, imageOxygenLevel, imageFuelLevel;
 	//private Skin skin;
 	public String loseString;
@@ -64,6 +65,8 @@ public class HUD {
 		fuelLabel.setY(posYOxygen - new GlyphLayout(game.assets.get("fontHUD.ttf", BitmapFont.class), "FUEL").height/2 - 2 * height);
 
 		loseLabel = new Label(loseString, menulabelStyle);
+		gameCompleteLabel = new Label("GAME\nCOMPLETE !", menulabelStyle);
+		gameCompleteLabel.setAlignment(Align.center);
 		
         textButtonStyle = new TextButtonStyle();
 		textButtonStyle.up = skin.getDrawable("Button");
@@ -81,6 +84,8 @@ public class HUD {
 		replayButton3 = new TextButton("PLAY AGAIN", textButtonStyle);
 		menuButton2 = new TextButton("MENU", textButtonStyle);
 		resumeButton = new TextButton("RESUME", textButtonStyle);
+		//Game complete table button
+		menuButton3 = new TextButton("MENU", textButtonStyle);
 		
 		tableWin = new Table();
 		tableWin.setFillParent(true);
@@ -109,6 +114,14 @@ public class HUD {
 		tablePause.add(menuButton2).width(replayButton3.getPrefWidth()).pad(Gdx.graphics.getHeight()/50);
 		tablePause.addAction(Actions.alpha(0));
 		tablePause.setVisible(false);
+		
+		tableGameComplete = new Table();
+		tableGameComplete.setFillParent(true);
+		tableGameComplete.add(gameCompleteLabel).padBottom(Gdx.graphics.getHeight()/22);
+		tableGameComplete.row();
+		tableGameComplete.add(menuButton3).width(menuButton3.getPrefWidth()).pad(Gdx.graphics.getHeight()/50);
+		tableGameComplete.addAction(Actions.alpha(0));
+		tableGameComplete.setVisible(false);
 
 		imageTableBackground = new Image(skin.getDrawable("imageTable"));
 		imageTableBackground.setColor(0,0,0.25f,1);
@@ -134,6 +147,7 @@ public class HUD {
 		stage.addActor(tableWin);
 		stage.addActor(tableLose);
 		stage.addActor(tablePause);
+		stage.addActor(tableGameComplete);
 		stage.addActor(outOfFuelLabel);
 		stage.addActor(oxygenLabel);
 		stage.addActor(fuelLabel);
@@ -142,41 +156,13 @@ public class HUD {
 	}
 	
 	public void draw(){
-		/*
-		//Oxygen level
-		game.batch.setColor(0,0,1,1);
-		game.assets.get("fontHUD.ttf", BitmapFont.class).draw(	game.batch, 
-																"Oxygen", 
-																(posXOxygen - new GlyphLayout(game.assets.get("fontHUD.ttf", BitmapFont.class), "Oxygen").width - Gdx.graphics.getWidth()/100) * GameConstants.MPP, 
-																(posYOxygen + new GlyphLayout(game.assets.get("fontHUD.ttf", BitmapFont.class), "Oxygen").height) * GameConstants.MPP);
-		game.batch.draw(skin.getRegion("WhiteSquare"),
-						posXOxygen * GameConstants.MPP, 
-						posYOxygen * GameConstants.MPP, 
-						width * hero.getOxygenLevel()/GameConstants.MAX_OXYGEN * GameConstants.MPP, 
-						height * GameConstants.MPP);
-		
-		//Fuel level
-		game.batch.setColor(1,0,0,1);
-		game.assets.get("fontHUD.ttf", BitmapFont.class).draw(	game.batch, 
-																"Fuel", 
-																posXOxygen - new GlyphLayout(game.assets.get("fontHUD.ttf", BitmapFont.class), "Fuel").width - Gdx.graphics.getWidth()/100, 
-																posYOxygen + new GlyphLayout(game.assets.get("fontHUD.ttf", BitmapFont.class), "Fuel").height - 2 * height);
-		game.batch.draw(skin.getRegion("WhiteSquare"), 
-						posXOxygen, 
-						posYOxygen - 2 * height, 
-						width * hero.getFuelLevel()/GameConstants.MAX_FUEL, 
-						height);	
-		*/	
-		
-		//Test		
 		imageOxygenLevel.setWidth(width * hero.getOxygenLevel()/GameConstants.MAX_OXYGEN);	
 		imageFuelLevel.setWidth(width * hero.getFuelLevel()/GameConstants.MAX_FUEL);
 		
 		if(hero.getFuelLevel() <= 0)
 			imageFuelLevel.addAction(Actions.alpha(0));	
 		if(hero.getOxygenLevel() <= 0)
-			imageOxygenLevel.addAction(Actions.alpha(0));		
-		
+			imageOxygenLevel.addAction(Actions.alpha(0));			
 	}
 	
 	public void win(){
@@ -190,7 +176,19 @@ public class HUD {
 		imageTableBackground.addAction(Actions.sequence(Actions.moveTo(	Gdx.graphics.getWidth()/2 - imageTableBackground.getWidth()/2, 
 																		Gdx.graphics.getHeight()/2 - imageTableBackground.getHeight()/2),
 														Actions.alpha(1, 0.25f)));	
+	}
 	
+	public void gameComplete(){
+		GameConstants.GAME_PAUSED = true;
+		tableGameComplete.setVisible(true);
+		
+		imageTableBackground.setWidth(tableGameComplete.getPrefWidth() + Gdx.graphics.getWidth()/20);
+		imageTableBackground.setHeight(tableGameComplete.getPrefHeight() + Gdx.graphics.getWidth()/20);
+		
+		tableGameComplete.addAction(Actions.alpha(1, 0.25f));
+		imageTableBackground.addAction(Actions.sequence(Actions.moveTo(	Gdx.graphics.getWidth()/2 - imageTableBackground.getWidth()/2, 
+																		Gdx.graphics.getHeight()/2 - imageTableBackground.getHeight()/2),
+														Actions.alpha(1, 0.25f)));		
 	}
 	
 	public void lose(){
@@ -230,8 +228,13 @@ public class HUD {
 		nextButton.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y){
-				game.setScreen(new GameScreen(game));
+				GameConstants.SELECTED_LEVEL++;
+				try{
+					game.setScreen(new GameScreen(game));
+				}catch(Exception e){
+					game.setScreen(new MainMenuScreen(game));
 				}
+			}
 		});
 		
 		replayButton.addListener(new ClickListener(){
@@ -263,6 +266,13 @@ public class HUD {
 		});
 		
 		menuButton2.addListener(new ClickListener(){
+			@Override
+			public void clicked(InputEvent event, float x, float y){
+				game.setScreen(new MainMenuScreen(game));
+			}
+		});
+		
+		menuButton3.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y){
 				game.setScreen(new MainMenuScreen(game));

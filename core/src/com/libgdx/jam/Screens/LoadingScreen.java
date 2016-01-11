@@ -81,6 +81,7 @@ public class LoadingScreen implements Screen{
 		stage.addActor(imageLogo);		
 		imageLogo.addAction(Actions.sequence(Actions.alpha(0)
                 ,Actions.fadeIn(0.1f),Actions.delay(1.5f)));
+
 	}
 	
 	@Override
@@ -131,6 +132,7 @@ public class LoadingScreen implements Screen{
 	@Override
 	public void dispose() {
 		stage.dispose();
+		textureLogo.dispose();
 	}
 
 }

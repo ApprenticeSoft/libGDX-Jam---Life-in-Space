@@ -35,8 +35,7 @@ public class Exit extends Obstacle{
 		}
 		
 		if(exitAnimation.isAnimationFinished(animTime) && heroContact)
-			GameConstants.LEVEL_FINISHED = true;
-		
+			GameConstants.LEVEL_FINISHED = true;	
 	}
 	
 	@Override
