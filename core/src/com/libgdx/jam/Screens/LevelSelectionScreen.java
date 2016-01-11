@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -22,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.libgdx.jam.Data;
 import com.libgdx.jam.MyGdxGame;
 import com.libgdx.jam.Utils.ButtonAction;
 import com.libgdx.jam.Utils.GameConstants;
@@ -35,7 +37,7 @@ public class LevelSelectionScreen implements Screen{
 	private Skin skin;
 	private TextureAtlas textureAtlas;
 	
-	private TextButtonStyle textButtonStyle, textButtonStyleInactif;
+	private TextButtonStyle textButtonStyle;
 	private Array<TextButton> levels;
 	private TextButton backButton;
 	private Image transitionImage;
@@ -77,14 +79,7 @@ public class LevelSelectionScreen implements Screen{
 		textButtonStyle.fontColor = Color.WHITE;
 		textButtonStyle.downFontColor = new Color(35/256f,59/256f,95/256f, 1);
 		
-		//Style des boutons des niveaux non débloqués
-		textButtonStyleInactif = new TextButtonStyle();
-		textButtonStyleInactif.up = skin.getDrawable("Button");
-			
-		textButtonStyleInactif.font = game.assets.get("fontTable.ttf", BitmapFont.class);
-		textButtonStyleInactif.fontColor = new Color().set(0, 0, 0, 0.7f);
-		
-		//Affichage des niveaux
+		//Displaying levels
 		tableLevels = new Table();
 		tableLevels.defaults().width(Gdx.graphics.getWidth()/10).height(Gdx.graphics.getWidth()/10).space(Gdx.graphics.getWidth()/60);
 		
@@ -106,14 +101,14 @@ public class LevelSelectionScreen implements Screen{
 		tableLevels.setX(Gdx.graphics.getWidth()/2);
 		tableLevels.setY(45*Gdx.graphics.getHeight()/100);		
 
-		//Bouton retour
+		//Back button
 		backButton = new TextButton("<", textButtonStyle);
 		backButton.setWidth(Gdx.graphics.getWidth()/10);
 		backButton.setHeight(Gdx.graphics.getWidth()/10);
 		backButton.setX(levels.get(0).localToStageCoordinates(new Vector2(0,0)).x);
 		backButton.setY(levels.get(levels.size - 1).localToStageCoordinates(new Vector2(0,0)).y - backButton.getHeight() - Gdx.graphics.getWidth()/60);
 		
-		//Image noire permetant une transition entre les différents écrans
+		//Black image for transition
 		transitionImage = new Image(skin.getDrawable("WhiteSquare"));
 		transitionImage.setWidth(Gdx.graphics.getWidth());
 		transitionImage.setHeight(Gdx.graphics.getHeight());
@@ -125,6 +120,13 @@ public class LevelSelectionScreen implements Screen{
 		stage.addActor(screenTitle);
 		stage.addActor(backButton);
 		stage.addActor(transitionImage);
+		
+		for(int i = 0; i < levels.size; i++){
+			if((i + 1) > Data.getLevel()){
+				levels.get(i).setTouchable(Touchable.disabled);
+				levels.get(i).setVisible(false);
+			}
+		}
 	}
 	
 	@Override

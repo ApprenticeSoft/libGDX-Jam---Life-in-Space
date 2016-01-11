@@ -23,5 +23,4 @@ public class Data {
 	public static int getLevel() {
 	    return prefs.getInteger("Level");
 	}
-
 }

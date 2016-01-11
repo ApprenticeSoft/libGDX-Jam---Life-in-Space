@@ -25,8 +25,8 @@ public class MainMenuScreen implements Screen{
 	private OrthographicCamera camera;
 	private Stage stage;
 	private Skin skin;
-	private Texture textureLogo;
-	private Image imageLogo;
+	private Texture backgroundTexture, transitionTexture;
+	private Image backgroundImage, transitionImage;
 	private TextureAtlas textureAtlas;
 	private TextButton playButton, optionButton;
 	private TextButtonStyle textButtonStyle;
@@ -37,13 +37,25 @@ public class MainMenuScreen implements Screen{
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
-		textureLogo = new Texture(Gdx.files.internal("Images/Logo.jpg"), true);
-		textureLogo.setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.MipMapLinearNearest);
-		imageLogo = new Image(textureLogo);
-		imageLogo.setWidth(Gdx.graphics.getWidth());
-		imageLogo.setHeight(textureLogo.getHeight() * imageLogo.getWidth()/textureLogo.getWidth());
-		imageLogo.setX(Gdx.graphics.getWidth()/2 - imageLogo.getWidth()/2);
-		imageLogo.setY(Gdx.graphics.getHeight()/2 - imageLogo.getHeight()/2);
+		//Background
+		backgroundTexture = new Texture(Gdx.files.internal("Images/Logo.jpg"), true);
+		backgroundTexture.setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.MipMapLinearNearest);
+		backgroundImage = new Image(backgroundTexture);
+		backgroundImage.setWidth(Gdx.graphics.getWidth());
+		backgroundImage.setHeight(backgroundTexture.getHeight() * backgroundImage.getWidth()/backgroundTexture.getWidth());
+		backgroundImage.setX(Gdx.graphics.getWidth()/2 - backgroundImage.getWidth()/2);
+		backgroundImage.setY(Gdx.graphics.getHeight()/2 - backgroundImage.getHeight()/2);
+		
+		//Transition image
+		transitionTexture = new Texture(Gdx.files.internal("Images/LevelScreenBackground.jpg"), true);
+		transitionTexture.setFilter(TextureFilter.MipMapLinearNearest, TextureFilter.MipMapLinearNearest);
+		transitionImage = new Image(transitionTexture);
+		transitionImage.setWidth(Gdx.graphics.getWidth());
+		transitionImage.setHeight(transitionTexture.getHeight() * transitionImage.getWidth()/transitionTexture.getWidth());
+		transitionImage.setX(Gdx.graphics.getWidth()/2 - transitionImage.getWidth()/2);
+		transitionImage.setY(Gdx.graphics.getHeight()/2 - transitionImage.getHeight()/2);
+		transitionImage.addAction(Actions.alpha(0));
+		transitionImage.setVisible(false);
 		
 		stage = new Stage();
 		skin = new Skin();
@@ -59,7 +71,6 @@ public class MainMenuScreen implements Screen{
 		textButtonStyle.downFontColor = new Color(0, 0, 0, 1);
 		
 		playButton = new TextButton("PLAY", textButtonStyle);
-		//playButton.setWidth(Gdx.graphics.getWidth()/3);
 		playButton.setHeight(Gdx.graphics.getHeight()/7);
 		playButton.setX(Gdx.graphics.getWidth()/2 - playButton.getWidth()/2);
 		playButton.setY(29 * Gdx.graphics.getHeight()/100 - playButton.getHeight()/2);
@@ -70,8 +81,9 @@ public class MainMenuScreen implements Screen{
 		optionButton.setX(playButton.getX());
 		optionButton.setY(playButton.getY() - optionButton.getHeight() - Gdx.graphics.getHeight()/100);
 		
-		stage.addActor(imageLogo);
+		stage.addActor(backgroundImage);
 		stage.addActor(playButton);
+		stage.addActor(transitionImage);
 		
 		playButton.addAction(Actions.sequence(Actions.alpha(0)
                 ,Actions.fadeIn(0.25f)));
@@ -96,7 +108,13 @@ public class MainMenuScreen implements Screen{
 		playButton.addListener(new ClickListener(){
 			 @Override
 		        public void clicked(InputEvent event, float x, float y) {
-				 game.setScreen(new LevelSelectionScreen/*GameScreen*/(game));
+				transitionImage.setVisible(true);
+				transitionImage.addAction(Actions.sequence(Actions.alpha(1, 0.2f),	 
+															Actions.run(new Runnable() {
+													            @Override
+													            public void run() {
+																	game.setScreen(new LevelSelectionScreen(game));
+													            }})));
 			 }
 		});
 		
