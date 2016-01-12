@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.libgdx.jam.MyGdxGame;
 import com.libgdx.jam.Utils.GameConstants;
 
 public class ObstacleMoving extends Obstacle{
@@ -22,8 +23,8 @@ public class ObstacleMoving extends Obstacle{
 	private float widthFactor = 1;
 	private float heightFactor = 1;
 	
-	public ObstacleMoving(World world, OrthographicCamera camera, PolylineMapObject polylineObject, TextureAtlas textureAtlas) {
-		super(world, camera, polylineObject);
+	public ObstacleMoving(final MyGdxGame game, World world, OrthographicCamera camera, PolylineMapObject polylineObject, TextureAtlas textureAtlas) {
+		super(game, world, camera, polylineObject);
 		
 		ninePatch = new NinePatch(textureAtlas.findRegion("MovingObstacle"), 49, 49, 49, 49);
 		//ninePatch.scale(0.5f*GameConstants.MPP, 0.5f*GameConstants.MPP);
@@ -97,7 +98,7 @@ public class ObstacleMoving extends Obstacle{
 	@Override
 	
 
-	public void active(){
+	public void active(Hero hero){
 		if(active){
 			if(!loop){
 				if(!backward){

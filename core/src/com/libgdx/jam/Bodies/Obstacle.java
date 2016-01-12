@@ -16,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.libgdx.jam.MyGdxGame;
 import com.libgdx.jam.Utils.GameConstants;
 
 public class Obstacle {
@@ -34,13 +35,13 @@ public class Obstacle {
 	protected NinePatch ninePatch;
 	protected String stringTextureRegion;
 	
-	public Obstacle(World world, OrthographicCamera camera, MapObject rectangleObject){	
+	public Obstacle(final MyGdxGame game, World world, OrthographicCamera camera, MapObject rectangleObject){	
 	}
 	
-	public Obstacle(World world, OrthographicCamera camera, MapObject rectangleObject, TextureAtlas textureAtlas){		
+	public Obstacle(final MyGdxGame game, World world, OrthographicCamera camera, MapObject rectangleObject, TextureAtlas textureAtlas){		
 	}
 	
-	public Obstacle(World world, OrthographicCamera camera, PolylineMapObject polylineObject){
+	public Obstacle(final MyGdxGame game, World world, OrthographicCamera camera, PolylineMapObject polylineObject){
 		setInitialState(polylineObject);
 	}
 	
@@ -138,7 +139,7 @@ public class Obstacle {
 			active = true;		
 	}
 
-	public void active(){
+	public void active(Hero hero){
 		
 	}
 	

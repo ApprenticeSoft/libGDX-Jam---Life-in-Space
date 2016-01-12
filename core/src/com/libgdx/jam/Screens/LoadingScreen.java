@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -42,6 +43,10 @@ public class LoadingScreen implements Screen{
 		imageLogo.setX(Gdx.graphics.getWidth()/2 - imageLogo.getWidth()/2);
 		imageLogo.setY(Gdx.graphics.getHeight()/2 - imageLogo.getHeight()/2);
 		stage = new Stage();
+		
+		//Loading of the sounds
+		game.assets.load("Sounds/Piston.mp3", Sound.class);
+		game.assets.load("Sounds/Jetpack.mp3", Sound.class);
 		
 		//Loading of the TextureAtlas
 		game.assets.load("Images/Images.pack", TextureAtlas.class);

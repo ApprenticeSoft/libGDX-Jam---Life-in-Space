@@ -23,8 +23,8 @@ public class Leak extends Obstacle{
 	private float force, leakSize, leakAngle, leakScale, leakSpeed;
 	private Animation leakAnimation;
 	
-	public Leak(World world, OrthographicCamera camera,	MapObject rectangleObject, final MyGdxGame game) {
-		super(world, camera, rectangleObject);
+	public Leak(final MyGdxGame game, World world, OrthographicCamera camera,	MapObject rectangleObject) {
+		super(game, world, camera, rectangleObject);
 		create(world, camera, rectangleObject);
 		
 		body.getFixtureList().get(0).setSensor(true);

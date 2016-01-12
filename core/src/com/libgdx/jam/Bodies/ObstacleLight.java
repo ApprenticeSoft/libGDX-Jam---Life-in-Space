@@ -6,11 +6,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.libgdx.jam.MyGdxGame;
 
 public class ObstacleLight extends Obstacle{
 
-	public ObstacleLight(World world, OrthographicCamera camera, MapObject rectangleObject) {
-		super(world, camera, rectangleObject);
+	public ObstacleLight(final MyGdxGame game, World world, OrthographicCamera camera, MapObject rectangleObject) {
+		super(game, world, camera, rectangleObject);
 		create(world, camera, rectangleObject);
 		
 		body.setUserData("ObstacleLight");

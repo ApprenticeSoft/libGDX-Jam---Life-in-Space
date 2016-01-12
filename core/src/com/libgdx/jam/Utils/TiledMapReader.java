@@ -56,17 +56,17 @@ public class TiledMapReader {
         	if(rectangleObject.getProperties().get("Type") != null){
         		//End of the level
         		if(rectangleObject.getProperties().get("Type").equals("Exit")){
-        			exit = new Exit(world, camera, rectangleObject, game);
+        			exit = new Exit(game, world, camera, rectangleObject);
                     exits.add(exit);
         		}
         		//Light obstacles
         		else if(rectangleObject.getProperties().get("Type").equals("Light")){
-	            	ObstacleLight obstacle = new ObstacleLight(world, camera, rectangleObject);
+	            	ObstacleLight obstacle = new ObstacleLight(game, world, camera, rectangleObject);
 	                obstacles.add(obstacle);
             	}
         		//Doors
         		else if(rectangleObject.getProperties().get("Type").equals("Door")){
-	            	ObstacleDoor obstacle = new ObstacleDoor(world, camera, rectangleObject);
+	            	ObstacleDoor obstacle = new ObstacleDoor(game, world, camera, rectangleObject);
 	                obstacles.add(obstacle);
             	}
             	//Pistons
@@ -75,17 +75,17 @@ public class TiledMapReader {
             	}
             	//Revolving obstacles
             	else if(rectangleObject.getProperties().get("Type").equals("Revolving")){
-	            	ObstacleRevolving obstacle = new ObstacleRevolving(world, camera, rectangleObject);
+	            	ObstacleRevolving obstacle = new ObstacleRevolving(game, world, camera, rectangleObject);
 	                obstacles.add(obstacle);
             	}
             	//Leaks
             	else if(rectangleObject.getProperties().get("Type").equals("Leak")){
-	            	Leak leak = new Leak(world, camera, rectangleObject, game);
+	            	Leak leak = new Leak(game, world, camera, rectangleObject);
 	                leaks.add(leak);
             	}
         	}
         	else{
-        		Wall obstacle = new Wall(world, camera, rectangleObject, game.assets.get("Images/Images.pack", TextureAtlas.class));
+        		Wall obstacle = new Wall(game, world, camera, rectangleObject, game.assets.get("Images/Images.pack", TextureAtlas.class));
                 obstacles.add(obstacle);
         	}
         }
@@ -96,8 +96,7 @@ public class TiledMapReader {
         		for(int j = 0; j < pistons.size; j++){
         			if(Integer.parseInt(pistons.get(i).getProperties().get("Group").toString()) == Integer.parseInt(pistons.get(j).getProperties().get("Group").toString()) &&
         					i != j){  				
-        				ObstaclePiston piston = new ObstaclePiston(world, camera, pistons.get(i), game.assets.get("Images/Images.pack", TextureAtlas.class), pistons.get(j));
-        				obstacles.add(piston);
+        				ObstaclePiston piston = new ObstaclePiston(game, world, camera, pistons.get(i), game.assets.get("Images/Images.pack", TextureAtlas.class), pistons.get(j));
         				obstacles.add(piston);
         				
         				pistons.removeIndex(i);
@@ -112,7 +111,7 @@ public class TiledMapReader {
         
         //Moving obstacles     
         for(PolylineMapObject polylineObject : objects.getByType(PolylineMapObject.class)){
-        	ObstacleMoving obstacleMoving = new ObstacleMoving(world, camera, polylineObject, game.assets.get("Images/Images.pack", TextureAtlas.class));
+        	ObstacleMoving obstacleMoving = new ObstacleMoving(game, world, camera, polylineObject, game.assets.get("Images/Images.pack", TextureAtlas.class));
         	obstacles.add(obstacleMoving); 	
         }
               
@@ -165,9 +164,9 @@ public class TiledMapReader {
         for(Leak leak : leaks)
         	leak.active();		
         for(Obstacle obstacle : obstacles)
-        	obstacle.active();
+        	obstacle.active(hero);
         for(Obstacle obstacle : obstaclesWithNinePatch)
-        	obstacle.active();       
+        	obstacle.active(hero);       
         for(Item item : items)
         	item.active(this);        
         for(Exit exit : exits)

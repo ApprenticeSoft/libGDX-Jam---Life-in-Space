@@ -5,6 +5,7 @@ import box2dLight.RayHandler;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -34,6 +35,7 @@ public class Hero {
     private Animation tomIdle, tomFly;
     private boolean fly;
     private int direction;
+    private Sound sound;
 	
 	//Test Box2DLight
 	private PointLight light;
@@ -54,6 +56,8 @@ public class Hero {
 		oxygenLevel = GameConstants.MAX_OXYGEN;
 		fuelLevel = GameConstants.MAX_FUEL;
 		fly = false;
+		
+		sound = game.assets.get("Sounds/Jetpack.mp3", Sound.class);
 		
 		MapObjects personnages = (MapObjects)tiledMap.getLayers().get("Spawn").getObjects();
 
@@ -94,10 +98,15 @@ public class Hero {
 	public void displacement(){	
 		oxygenLevel -= Gdx.graphics.getDeltaTime();
 		
+		if(Gdx.input.isKeyJustPressed(Keys.W) && fuelLevel > 0)
+			sound.loop();
+		
 		if(Gdx.input.isKeyPressed(Keys.W) && fuelLevel > 0){
 			heroBody.applyForceToCenter(new Vector2(0, GameConstants.JETPACK_IMPULSE).rotate(heroBody.getAngle() * MathUtils.radiansToDegrees), true);
 			fuelLevel -= Gdx.graphics.getDeltaTime() * GameConstants.FUEL_CONSUMPTION;
         }
+		else
+			sound.stop();
         
 		if(Gdx.input.isKeyPressed(Keys.A))
 			heroBody.setAngularVelocity(GameConstants.TOM_ROTATION);

@@ -17,8 +17,8 @@ public class Exit extends Obstacle{
 	public boolean heroContact = false;
 	private float animTime = 0;
 	
-	public Exit(World world, OrthographicCamera camera, MapObject rectangleObject, final MyGdxGame game) {
-		super(world, camera, rectangleObject);
+	public Exit(final MyGdxGame game, World world, OrthographicCamera camera, MapObject rectangleObject) {
+		super(game, world, camera, rectangleObject);
 		create(world, camera, rectangleObject);
 		
 		body.getFixtureList().get(0).setSensor(true);
@@ -26,7 +26,7 @@ public class Exit extends Obstacle{
 		body.setUserData("Exit");
 		
 
-		exitAnimation = new Animation(0.06f, game.assets.get("Images/Exit_Animation.pack", TextureAtlas.class).findRegions("Exit_Animation"), Animation.PlayMode.NORMAL);
+		exitAnimation = new Animation(0.04f, game.assets.get("Images/Exit_Animation.pack", TextureAtlas.class).findRegions("Exit_Animation"), Animation.PlayMode.NORMAL);
 	}
 	
 	public void active(){

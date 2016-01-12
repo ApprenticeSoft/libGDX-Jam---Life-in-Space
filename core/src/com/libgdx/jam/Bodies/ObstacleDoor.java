@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.libgdx.jam.MyGdxGame;
 
 public class ObstacleDoor extends Obstacle{
 	
@@ -14,8 +15,8 @@ public class ObstacleDoor extends Obstacle{
 	private float doorAngle, doorScale;
 	private Vector2 initialPosition, finalPosition;
 
-	public ObstacleDoor(World world, OrthographicCamera camera,	MapObject rectangleObject) {
-		super(world, camera, rectangleObject);
+	public ObstacleDoor(final MyGdxGame game, World world, OrthographicCamera camera,	MapObject rectangleObject) {
+		super(game, world, camera, rectangleObject);
 		create(world, camera, rectangleObject);
 		
 		stringTextureRegion = "Door";
@@ -46,7 +47,7 @@ public class ObstacleDoor extends Obstacle{
 	}
 	
 	@Override
-	public void active(){
+	public void active(Hero hero){
 		if(active)
 			body.setLinearVelocity(	Math.signum(speed) * (initialPosition.x - body.getPosition().x) * speed, 
 									Math.signum(speed) * (initialPosition.y - body.getPosition().y) * speed

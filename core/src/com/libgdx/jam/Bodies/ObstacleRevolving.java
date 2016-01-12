@@ -5,13 +5,14 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.libgdx.jam.MyGdxGame;
 
 public class ObstacleRevolving extends Obstacle{
 	
 	private float speed = 90;
 
-	public ObstacleRevolving(World world, OrthographicCamera camera, MapObject rectangleObject) {
-		super(world, camera, rectangleObject);
+	public ObstacleRevolving(final MyGdxGame game, World world, OrthographicCamera camera, MapObject rectangleObject) {
+		super(game, world, camera, rectangleObject);
 		create(world, camera, rectangleObject);
 		
 		stringTextureRegion = "RevolvingObject";

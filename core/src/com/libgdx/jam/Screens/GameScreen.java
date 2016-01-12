@@ -123,20 +123,27 @@ public class GameScreen implements Screen{
 	        backgroundTime += Gdx.graphics.getDeltaTime();
 	        
 			world.step(GameConstants.BOX_STEP, GameConstants.BOX_VELOCITY_ITERATIONS, GameConstants.BOX_POSITION_ITERATIONS);
-			mapReader.active();
+			//mapReader.active();
 	        
-	        if(Gdx.input.isKeyPressed(Keys.ESCAPE)){
+	        if(Gdx.input.isKeyPressed(Keys.ESCAPE))
 	        	hud.pause();
-	        }
 	        
 	        if(mapReader.hero.getOxygenLevel() <= 0){
 	        	hud.loseString = "OUT OF OXYGEN !";
 	        	hud.lose();
 	        }
 	        else if (mapReader.hero.getFuelLevel() <= 0)
-	        	hud.outOfFuel();	
+	        	hud.outOfFuel();	     
+
+			for(Obstacle obstacle : mapReader.obstaclesWithNinePatch)
+				obstacle.active = true;
+		}
+		else{
+			for(Obstacle obstacle : mapReader.obstaclesWithNinePatch)
+				obstacle.active = false;
 		}
 
+		mapReader.active();
 		stage.act();
 		
 		//Drawing graphics

@@ -1,18 +1,21 @@
 package com.libgdx.jam.Bodies;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.libgdx.jam.MyGdxGame;
 import com.libgdx.jam.Utils.GameConstants;
 
 public class ObstaclePiston extends Obstacle{
@@ -25,11 +28,16 @@ public class ObstaclePiston extends Obstacle{
 	private Vector2[] travel;
 	private int step = 1;
 	private Rectangle rectangleAxis;
+	private Sound sound;
+	private long soundId;
 	
 	private NinePatch ninePatchAxis;
 	
-	public ObstaclePiston(World world, OrthographicCamera camera, MapObject rectangleObject1, TextureAtlas textureAtlas, MapObject rectangleObject2) {
-		super(world, camera, rectangleObject1, textureAtlas);
+	public ObstaclePiston(final MyGdxGame game, World world, OrthographicCamera camera, MapObject rectangleObject1, TextureAtlas textureAtlas, MapObject rectangleObject2) {
+		super(game, world, camera, rectangleObject1, textureAtlas);
+
+		sound = game.assets.get("Sounds/Piston.mp3", Sound.class);
+		sound.stop();
 		
 		if(rectangleObject1.getProperties().get("Part").equals("Head")){
 			create(world, camera, rectangleObject1);
@@ -119,6 +127,7 @@ public class ObstaclePiston extends Obstacle{
 
         direction = new Vector2();
         direction = new Vector2(travel[step].x - body.getPosition().x, travel[step].y - body.getPosition().y);
+        soundId = sound.play();
 	}
 	
 	@Override
@@ -127,13 +136,15 @@ public class ObstaclePiston extends Obstacle{
 	}
 
 	@Override
-	public void active(){
+	public void active(Hero hero){
 		if(active){
 			if(delay > 0){
 				delay -= Gdx.graphics.getDeltaTime();
 			}
-			else{
-				if(!new Vector2(travel[step].x - body.getPosition().x, travel[step].y - body.getPosition().y).hasSameDirection(direction)){			
+			else{			
+				if(!new Vector2(travel[step].x - body.getPosition().x, travel[step].y - body.getPosition().y).hasSameDirection(direction)){	
+					sound.stop(soundId);
+					soundId = sound.play(1, MathUtils.random(0.98f, 1.02f), 0);
 					if(step > 0)
 						step = 0;
 					else step = 1;
@@ -142,9 +153,15 @@ public class ObstaclePiston extends Obstacle{
 				}
 				body.setLinearVelocity(direction.clamp(speed, speed)); 
 			}
+			
+			sound.setVolume(soundId, 10/(new Vector2(hero.heroBody.getPosition().sub(posX, posY)).len()));
+			sound.resume();
 		}
-		else
-			body.setLinearVelocity(0, 0); 		
+		else{
+			body.setLinearVelocity(0, 0); 	
+			sound.pause();
+		}
+			
 	}
 	
 	@Override
