@@ -144,7 +144,7 @@ public class LevelSelectionScreen implements Screen{
 		
 		for(int i = 0; i < levels.size; i++){
 			if(levels.get(i).getStyle() == textButtonStyle)
-				buttonAction.niveauListener(game, levels.get(i), (i+1));
+				buttonAction.levelListener(game, levels.get(i), (i+1));
 		}
 		
 		backButton.addListener(new ClickListener(){

@@ -13,7 +13,7 @@ public class MyGdxGame extends Game implements ApplicationListener{
 	@Override
 	public void create () {
 		Data.Load();
-		//Data.setLevel(15);
+		Data.setLevel(3);
 		
 		batch = new SpriteBatch();
 		assets = new AssetManager();

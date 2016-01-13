@@ -11,7 +11,7 @@ public class ButtonAction {
 	public ButtonAction(){
 	}
 	
-	public void niveauListener(final MyGdxGame game, TextButton bouton, final int niveau){
+	public void levelListener(final MyGdxGame game, TextButton bouton, final int niveau){
 		bouton.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y){
@@ -22,7 +22,6 @@ public class ButtonAction {
 					catch(Exception e){
 					System.out.println("The level doesn't exist !");
 				}
-				System.out.println("Numéro du niveau : " + GameConstants.SELECTED_LEVEL);
 			}
 		});
 	}
