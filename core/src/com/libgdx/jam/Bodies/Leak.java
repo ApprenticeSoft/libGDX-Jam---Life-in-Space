@@ -3,6 +3,7 @@ package com.libgdx.jam.Bodies;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -22,11 +23,16 @@ public class Leak extends Obstacle{
 	private Vector2 leakForce, leakOrigin;
 	private float force, leakSize, leakAngle, leakScale, leakSpeed;
 	private Animation leakAnimation;
+	private long soundId;
 	
 	public Leak(final MyGdxGame game, World world, OrthographicCamera camera,	MapObject rectangleObject) {
 		super(game, world, camera, rectangleObject);
 		create(world, camera, rectangleObject);
 		
+		sound = game.assets.get("Sounds/Gaz Leak.ogg", Sound.class);
+		soundId = sound.loop(0.1f, MathUtils.random(0.98f, 1.02f), 0);
+		//sound.pause();
+					
 		body.getFixtureList().get(0).setSensor(true);
 		body.getFixtureList().get(0).setUserData("Leak");
 		body.setUserData("Leak");
@@ -87,7 +93,10 @@ public class Leak extends Obstacle{
 		fixtures.remove(fixture);
 	}
 	
-	public void active(){
+	public void active(Hero hero){
+		sound.resume();
+		sound.setVolume(soundId, 4/(new Vector2(hero.heroBody.getPosition().sub(posX, posY)).len()));
+		
 		for(Fixture fixture : fixtures){
 			float distanceX = Math.abs(fixture.getBody().getPosition().x - leakOrigin.x);
 			float distanceY = Math.abs(fixture.getBody().getPosition().y - leakOrigin.y);

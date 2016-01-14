@@ -1,5 +1,6 @@
 package com.libgdx.jam.Bodies;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -27,13 +28,15 @@ public class Obstacle {
 	protected PolygonShape polygonShape;
 	protected Rectangle rectangle;
 	public float posX, posY, width, height, angle;
-	//OrthographicCamera camera;
 	public int associationNumber;
 	public boolean active;
 	
 	//Graphs
 	protected NinePatch ninePatch;
 	protected String stringTextureRegion;
+	
+	//Sound
+	protected Sound sound;
 	
 	public Obstacle(final MyGdxGame game, World world, OrthographicCamera camera, MapObject rectangleObject){	
 	}
@@ -52,7 +55,6 @@ public class Obstacle {
 		
 		rectangle = ((RectangleMapObject) rectangleObject).getRectangle();
 			
-		//this.camera = camera;
 		this.posX = (rectangle.x + rectangle.width/2) * GameConstants.MPP;
 		this.posY = (rectangle.y + rectangle.height/2) * GameConstants.MPP;
 		this.width = (rectangle.width/2) * GameConstants.MPP;
@@ -168,5 +170,18 @@ public class Obstacle {
 						this.body.getPosition().y - height, 
 						2 * width, 
 						2 * height);
+	}
+	
+	public void soundPause(){
+		if(sound != null)
+			sound.pause();
+	}
+	
+	public void soundResume(){
+		if(sound != null)
+			sound.resume();
+	}
+	
+	public void dispose(){	
 	}
 }

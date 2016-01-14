@@ -1,10 +1,10 @@
 package com.libgdx.jam.Bodies;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
+import com.libgdx.jam.MyGdxGame;
 import com.libgdx.jam.Utils.GameConstants;
 
 public class ItemSwitch {
@@ -23,12 +24,16 @@ public class ItemSwitch {
 	private float width, height;
 	private boolean isOn;
 	private String[] associationNumbers;
+	private Sound soundOn, soundOff;
 	
-	public ItemSwitch(World world,  OrthographicCamera camera, MapObject mapObject){
-		create(world, camera, mapObject);
+	public ItemSwitch(final MyGdxGame game, World world,  OrthographicCamera camera, MapObject mapObject){
+		create(game, world, camera, mapObject);
 	}
 	
-	public void create(World world,  OrthographicCamera camera, MapObject mapObject){
+	public void create(final MyGdxGame game, World world,  OrthographicCamera camera, MapObject mapObject){
+
+		soundOn = game.assets.get("Sounds/Button On.ogg", Sound.class);
+		soundOff = game.assets.get("Sounds/Button Off.ogg", Sound.class);
 		
 		//Is the switch on ?
 		if(mapObject.getProperties().get("On") != null){
@@ -71,6 +76,11 @@ public class ItemSwitch {
 	}
 	
 	public void active(Array<Obstacle> obstacles){	
+		if(isOn)
+			soundOff.play();
+		else
+			soundOn.play();
+		
 		isOn = !isOn;
 		
 		for(String number : associationNumbers){

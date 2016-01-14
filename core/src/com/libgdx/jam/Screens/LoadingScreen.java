@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -45,8 +46,17 @@ public class LoadingScreen implements Screen{
 		stage = new Stage();
 		
 		//Loading of the sounds
-		game.assets.load("Sounds/Piston.mp3", Sound.class);
-		game.assets.load("Sounds/Jetpack.mp3", Sound.class);
+		game.assets.load("Sounds/Piston.ogg", Sound.class);
+		game.assets.load("Sounds/Jetpack.ogg", Sound.class);
+		game.assets.load("Sounds/Impact.ogg", Sound.class);
+		game.assets.load("Sounds/Door.ogg", Sound.class);
+		game.assets.load("Sounds/Fuel Refill.ogg", Sound.class);
+		game.assets.load("Sounds/Oxygen Refill.ogg", Sound.class);
+		game.assets.load("Sounds/Button On.ogg", Sound.class);
+		game.assets.load("Sounds/Button Off.ogg", Sound.class);
+		game.assets.load("Sounds/Exit.ogg", Sound.class);
+		game.assets.load("Sounds/Gaz Leak.ogg", Sound.class);
+		game.assets.load("Sounds/Background.wav", Music.class);
 		
 		//Loading of the TextureAtlas
 		game.assets.load("Images/Images.pack", TextureAtlas.class);

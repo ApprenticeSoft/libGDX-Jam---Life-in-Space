@@ -182,5 +182,6 @@ public class LevelSelectionScreen implements Screen{
 	public void dispose() {
 		backgroundTexture.dispose();
 		stage.dispose();
+		skin.dispose();
 	}
 }

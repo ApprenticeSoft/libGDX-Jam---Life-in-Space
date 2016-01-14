@@ -5,6 +5,7 @@ import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -59,6 +60,9 @@ public class GameScreen implements Screen{
     private Texture backgroundTexture;
     private float backgroundTime;
     
+    //Background sound
+    private Music backgroundSound;
+    
 	private RayHandler rayHandler;
 	
 	public GameScreen(final MyGdxGame game){
@@ -67,6 +71,11 @@ public class GameScreen implements Screen{
 		GameConstants.LEVEL_FINISHED = false;
 		GameConstants.GAME_PAUSED = false;
 		GameConstants.ANIM_TIME = 0;
+		
+		backgroundSound = game.assets.get("Sounds/Background.wav", Music.class);
+		backgroundSound.setLooping(true);
+		backgroundSound.play();
+		backgroundSound.setVolume(0.15f);
 		
 		camera = new MyCamera();
 		camera.setToOrtho(false, GameConstants.SCREEN_WIDTH, GameConstants.SCREEN_HEIGHT);
@@ -123,7 +132,7 @@ public class GameScreen implements Screen{
 	        backgroundTime += Gdx.graphics.getDeltaTime();
 	        
 			world.step(GameConstants.BOX_STEP, GameConstants.BOX_VELOCITY_ITERATIONS, GameConstants.BOX_POSITION_ITERATIONS);
-			//mapReader.active();
+			mapReader.active();
 	        
 	        if(Gdx.input.isKeyPressed(Keys.ESCAPE))
 	        	hud.pause();
@@ -139,11 +148,12 @@ public class GameScreen implements Screen{
 				obstacle.active = true;
 		}
 		else{
+			mapReader.soundPause();
+		
 			for(Obstacle obstacle : mapReader.obstaclesWithNinePatch)
 				obstacle.active = false;
 		}
-
-		mapReader.active();
+		
 		stage.act();
 		
 		//Drawing graphics
@@ -246,6 +256,15 @@ public class GameScreen implements Screen{
 			    				item.activate();
 			    		}
 			    	}
+			    	/*
+			    	//Contact sound
+			    	if(fixtureA.getUserData().equals("Tom") && fixtureB.getUserData().equals("Obstacle")){
+			    		mapReader.hero.impact();
+			    	}
+			    	else if(fixtureA.getUserData().equals("Obstacle") && fixtureB.getUserData().equals("Tom")){
+				    		mapReader.hero.impact();
+				    }
+			    	*/	
 				}  
 			}
 
@@ -290,6 +309,7 @@ public class GameScreen implements Screen{
 				if((fixtureA.getUserData() != null && fixtureA.getUserData().equals("Obstacle")) && (fixtureB.getUserData() != null && fixtureB.getUserData().equals("Obstacle"))) {
 			    	contact.setEnabled(false);
 				}
+				
 			}
 
 			@Override
@@ -328,7 +348,8 @@ public class GameScreen implements Screen{
 
 	@Override
 	public void dispose() {
-		stage.dispose();			
+		stage.dispose();
+		backgroundSound.dispose();
 	}
 	
 	public void finishLevel(){

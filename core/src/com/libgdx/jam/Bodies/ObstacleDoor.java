@@ -1,5 +1,6 @@
 package com.libgdx.jam.Bodies;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -19,6 +20,7 @@ public class ObstacleDoor extends Obstacle{
 		super(game, world, camera, rectangleObject);
 		create(world, camera, rectangleObject);
 		
+		sound = game.assets.get("Sounds/Door.ogg", Sound.class);
 		stringTextureRegion = "Door";
 		
 		doorScale = 1;
@@ -61,6 +63,7 @@ public class ObstacleDoor extends Obstacle{
 	@Override
 	public void activate(){
 		active = !active;
+		sound.play();
 	}
 	
 	@Override

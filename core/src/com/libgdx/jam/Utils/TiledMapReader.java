@@ -120,17 +120,17 @@ public class TiledMapReader {
         	if(tiledMap.getLayers().get("Spawn").getObjects().get(i).getProperties().get("Type") != null){	
         		//Switches
         		if(tiledMap.getLayers().get("Spawn").getObjects().get(i).getProperties().get("Type").equals("Switch")){
-        			ItemSwitch itemSwitch = new ItemSwitch(world, camera, tiledMap.getLayers().get("Spawn").getObjects().get(i));
+        			ItemSwitch itemSwitch = new ItemSwitch(game, world, camera, tiledMap.getLayers().get("Spawn").getObjects().get(i));
         			switchs.add(itemSwitch);
         		}
         		//Oxygen Refill
         		else if(tiledMap.getLayers().get("Spawn").getObjects().get(i).getProperties().get("Type").equals("Oxygen")){
-        			OxygenRefill oxygenRefill = new OxygenRefill(world, camera, tiledMap.getLayers().get("Spawn").getObjects().get(i), hero);
+        			OxygenRefill oxygenRefill = new OxygenRefill(game, world, camera, tiledMap.getLayers().get("Spawn").getObjects().get(i), hero);
         			items.add(oxygenRefill);
         		}
         		//Fuel Refill
         		else if(tiledMap.getLayers().get("Spawn").getObjects().get(i).getProperties().get("Type").equals("Fuel")){
-        			FuelRefill fuelRefill = new FuelRefill(world, camera, tiledMap.getLayers().get("Spawn").getObjects().get(i), hero);
+        			FuelRefill fuelRefill = new FuelRefill(game, world, camera, tiledMap.getLayers().get("Spawn").getObjects().get(i), hero);
         			items.add(fuelRefill);
         		}
         	}
@@ -162,7 +162,7 @@ public class TiledMapReader {
 		hero.displacement();
         
         for(Leak leak : leaks)
-        	leak.active();		
+        	leak.active(hero);		
         for(Obstacle obstacle : obstacles)
         	obstacle.active(hero);
         for(Obstacle obstacle : obstaclesWithNinePatch)
@@ -187,5 +187,33 @@ public class TiledMapReader {
 		hero.draw(batch, GameConstants.ANIM_TIME);
 		for(Leak leak : leaks)
 			leak.draw(batch, animTime);
+	}
+	
+	public void soundPause(){
+		hero.soundPause();
+        for(Leak leak : leaks)
+        	leak.soundPause();		
+		for(Obstacle obstacle : obstacles)
+			obstacle.soundPause();
+		for(Obstacle obstacle : obstaclesWithNinePatch)
+			obstacle.soundPause();
+	}
+	
+	public void soundResume(){
+		hero.soundResume();
+        for(Leak leak : leaks)
+        	leak.soundResume();	
+		for(Obstacle obstacle : obstacles)
+			obstacle.soundResume();
+		for(Obstacle obstacle : obstaclesWithNinePatch)
+			obstacle.soundResume();
+	}
+	
+	public void dispose(){
+		hero.dispose();
+		for(Obstacle obstacle : obstacles)
+			obstacle.dispose();
+		for(Obstacle obstacle : obstaclesWithNinePatch)
+			obstacle.dispose();
 	}
 }

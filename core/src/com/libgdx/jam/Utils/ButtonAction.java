@@ -17,6 +17,7 @@ public class ButtonAction {
 			public void clicked(InputEvent event, float x, float y){
 				GameConstants.SELECTED_LEVEL = niveau;
 				try{
+					game.music.stop();
 					game.setScreen(new GameScreen(game));
 				}
 					catch(Exception e){

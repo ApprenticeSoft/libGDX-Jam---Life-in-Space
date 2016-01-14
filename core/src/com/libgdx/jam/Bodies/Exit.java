@@ -1,6 +1,7 @@
 package com.libgdx.jam.Bodies;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,11 +16,14 @@ public class Exit extends Obstacle{
 	private Animation exitAnimation;
 	public boolean open = false;
 	public boolean heroContact = false;
+	private boolean soundPlayed = false;
 	private float animTime = 0;
 	
 	public Exit(final MyGdxGame game, World world, OrthographicCamera camera, MapObject rectangleObject) {
 		super(game, world, camera, rectangleObject);
 		create(world, camera, rectangleObject);
+		
+		sound = game.assets.get("Sounds/Exit.ogg", Sound.class);
 		
 		body.getFixtureList().get(0).setSensor(true);
 		body.getFixtureList().get(0).setUserData("Exit");
@@ -36,6 +40,11 @@ public class Exit extends Obstacle{
 		
 		if(exitAnimation.isAnimationFinished(animTime) && heroContact)
 			GameConstants.LEVEL_FINISHED = true;	
+		
+		if(exitAnimation.getKeyFrameIndex(animTime) == 27 && !soundPlayed){
+			sound.play();
+			soundPlayed = true;
+		}
 	}
 	
 	@Override

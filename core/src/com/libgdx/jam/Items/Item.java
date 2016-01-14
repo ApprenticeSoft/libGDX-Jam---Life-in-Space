@@ -1,5 +1,6 @@
 package com.libgdx.jam.Items;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -25,6 +26,9 @@ public class Item {
 	private float width, height;
 	public boolean used;
 	protected String stringTextureRegion;
+	
+	//Sound
+	protected Sound sound;
 	
 	public Item(){	
 	}

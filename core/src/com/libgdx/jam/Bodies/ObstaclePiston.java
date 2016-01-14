@@ -28,7 +28,6 @@ public class ObstaclePiston extends Obstacle{
 	private Vector2[] travel;
 	private int step = 1;
 	private Rectangle rectangleAxis;
-	private Sound sound;
 	private long soundId;
 	
 	private NinePatch ninePatchAxis;
@@ -36,8 +35,9 @@ public class ObstaclePiston extends Obstacle{
 	public ObstaclePiston(final MyGdxGame game, World world, OrthographicCamera camera, MapObject rectangleObject1, TextureAtlas textureAtlas, MapObject rectangleObject2) {
 		super(game, world, camera, rectangleObject1, textureAtlas);
 
-		sound = game.assets.get("Sounds/Piston.mp3", Sound.class);
+		sound = game.assets.get("Sounds/Piston.ogg", Sound.class);
 		sound.stop();
+        soundId = sound.play(0.8f);
 		
 		if(rectangleObject1.getProperties().get("Part").equals("Head")){
 			create(world, camera, rectangleObject1);
@@ -127,7 +127,6 @@ public class ObstaclePiston extends Obstacle{
 
         direction = new Vector2();
         direction = new Vector2(travel[step].x - body.getPosition().x, travel[step].y - body.getPosition().y);
-        soundId = sound.play();
 	}
 	
 	@Override
@@ -144,7 +143,7 @@ public class ObstaclePiston extends Obstacle{
 			else{			
 				if(!new Vector2(travel[step].x - body.getPosition().x, travel[step].y - body.getPosition().y).hasSameDirection(direction)){	
 					sound.stop(soundId);
-					soundId = sound.play(1, MathUtils.random(0.98f, 1.02f), 0);
+					soundId = sound.play(0.8f, MathUtils.random(0.98f, 1.02f), 0);
 					if(step > 0)
 						step = 0;
 					else step = 1;
@@ -160,8 +159,7 @@ public class ObstaclePiston extends Obstacle{
 		else{
 			body.setLinearVelocity(0, 0); 	
 			sound.pause();
-		}
-			
+		}			
 	}
 	
 	@Override
@@ -187,6 +185,11 @@ public class ObstaclePiston extends Obstacle{
 				this.body.getPosition().y + posAxisSprite.y, 
 				2 * widthAxis, 
 				2 * heightAxis);
+	}
+	
+	@Override
+	public void dispose(){
+		sound.dispose();
 	}
 	
 }

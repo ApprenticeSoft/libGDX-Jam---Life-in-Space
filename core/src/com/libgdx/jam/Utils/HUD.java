@@ -33,13 +33,11 @@ public class HUD {
 	private LabelStyle menulabelStyle, hudLabelStyle;
 	private Label outOfFuelLabel, loseLabel, oxygenLabel, fuelLabel, gameCompleteLabel;
 	private Image imageTableBackground, imageOxygenLevel, imageFuelLevel;
-	//private Skin skin;
 	public String loseString;
 	
 	public HUD(final MyGdxGame game, Stage stage, Skin skin, Hero hero){
 		this.game = game;
 		this.hero = hero;
-		//this.skin = skin;
 
 		outOfFuelAlpha = 0;
 		posXOxygen = 9 * Gdx.graphics.getWidth()/100;
@@ -261,6 +259,7 @@ public class HUD {
 		menuButton.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y){
+				game.getScreen().dispose();
 				game.setScreen(new MainMenuScreen(game));
 			}
 		});
@@ -268,6 +267,7 @@ public class HUD {
 		menuButton2.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y){
+				game.getScreen().dispose();
 				game.setScreen(new MainMenuScreen(game));
 			}
 		});
@@ -275,6 +275,7 @@ public class HUD {
 		menuButton3.addListener(new ClickListener(){
 			@Override
 			public void clicked(InputEvent event, float x, float y){
+				game.getScreen().dispose();
 				game.setScreen(new MainMenuScreen(game));
 			}
 		});

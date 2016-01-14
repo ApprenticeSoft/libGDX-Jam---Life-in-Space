@@ -35,7 +35,7 @@ public class Hero {
     private Animation tomIdle, tomFly;
     private boolean fly;
     private int direction;
-    private Sound sound;
+    private Sound soundJetPack, soundImpact;
 	
 	//Test Box2DLight
 	private PointLight light;
@@ -56,8 +56,9 @@ public class Hero {
 		oxygenLevel = GameConstants.MAX_OXYGEN;
 		fuelLevel = GameConstants.MAX_FUEL;
 		fly = false;
-		
-		sound = game.assets.get("Sounds/Jetpack.mp3", Sound.class);
+
+		soundJetPack = game.assets.get("Sounds/Jetpack.ogg", Sound.class);
+		soundImpact = game.assets.get("Sounds/Impact.ogg", Sound.class);
 		
 		MapObjects personnages = (MapObjects)tiledMap.getLayers().get("Spawn").getObjects();
 
@@ -99,14 +100,14 @@ public class Hero {
 		oxygenLevel -= Gdx.graphics.getDeltaTime();
 		
 		if(Gdx.input.isKeyJustPressed(Keys.W) && fuelLevel > 0)
-			sound.loop();
+			soundJetPack.loop(0.5f);
 		
 		if(Gdx.input.isKeyPressed(Keys.W) && fuelLevel > 0){
 			heroBody.applyForceToCenter(new Vector2(0, GameConstants.JETPACK_IMPULSE).rotate(heroBody.getAngle() * MathUtils.radiansToDegrees), true);
 			fuelLevel -= Gdx.graphics.getDeltaTime() * GameConstants.FUEL_CONSUMPTION;
         }
 		else
-			sound.stop();
+			soundJetPack.stop();
         
 		if(Gdx.input.isKeyPressed(Keys.A))
 			heroBody.setAngularVelocity(GameConstants.TOM_ROTATION);
@@ -238,5 +239,24 @@ public class Hero {
 					1,
 					heroBody.getAngle()*MathUtils.radiansToDegrees);
 		}
+	}
+	
+	public void impact(){
+		soundImpact.play(1, MathUtils.random(0.98f, 1.02f), 1);
+	}
+	
+	public void soundPause(){
+		if(soundJetPack != null)
+			soundJetPack.pause();
+	}
+	
+	public void soundResume(){
+		if(soundJetPack != null)
+			soundJetPack.resume();
+	}
+	
+	public void dispose(){
+		tomAtlas.dispose();
+		soundJetPack.dispose();
 	}
 }

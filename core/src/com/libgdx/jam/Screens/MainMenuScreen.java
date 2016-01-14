@@ -33,7 +33,10 @@ public class MainMenuScreen implements Screen{
 	
 	public MainMenuScreen(final MyGdxGame game){
 		this.game = game;
-
+		
+		if(!game.music.isPlaying())
+			game.music.play();
+		
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
@@ -148,5 +151,9 @@ public class MainMenuScreen implements Screen{
 	public void dispose() {
 		this.dispose();
 		stage.dispose();
+		backgroundTexture.dispose(); 
+		transitionTexture.dispose();
+		skin.dispose();
+		textureAtlas.dispose();
 	}
 }
