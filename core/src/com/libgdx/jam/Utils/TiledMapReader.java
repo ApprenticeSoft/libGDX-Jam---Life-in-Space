@@ -86,7 +86,7 @@ public class TiledMapReader {
         	}
         	else{
         		Wall obstacle = new Wall(game, world, camera, rectangleObject, game.assets.get("Images/Images.pack", TextureAtlas.class));
-                obstacles.add(obstacle);
+                //obstacles.add(obstacle);
         	}
         }
         

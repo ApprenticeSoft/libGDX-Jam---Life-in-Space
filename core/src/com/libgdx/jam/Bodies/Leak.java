@@ -29,9 +29,8 @@ public class Leak extends Obstacle{
 		super(game, world, camera, rectangleObject);
 		create(world, camera, rectangleObject);
 		
-		sound = game.assets.get("Sounds/Gaz Leak.ogg", Sound.class);
+		sound = game.assets.get("Sounds/Gas Leak.ogg", Sound.class);
 		soundId = sound.loop(0.1f, MathUtils.random(0.98f, 1.02f), 0);
-		//sound.pause();
 					
 		body.getFixtureList().get(0).setSensor(true);
 		body.getFixtureList().get(0).setUserData("Leak");

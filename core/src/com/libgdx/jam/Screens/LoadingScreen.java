@@ -55,7 +55,7 @@ public class LoadingScreen implements Screen{
 		game.assets.load("Sounds/Button On.ogg", Sound.class);
 		game.assets.load("Sounds/Button Off.ogg", Sound.class);
 		game.assets.load("Sounds/Exit.ogg", Sound.class);
-		game.assets.load("Sounds/Gaz Leak.ogg", Sound.class);
+		game.assets.load("Sounds/Gas Leak.ogg", Sound.class);
 		game.assets.load("Sounds/Background.wav", Music.class);
 		
 		//Loading of the TextureAtlas

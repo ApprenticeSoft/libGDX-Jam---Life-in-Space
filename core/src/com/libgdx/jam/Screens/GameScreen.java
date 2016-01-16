@@ -52,6 +52,8 @@ public class GameScreen implements Screen{
 	private Skin skin;
     private HUD hud;
     private Stage stage;
+    private int[] background = {0,1};
+    private int[] walls = {2};
     
     //Animation
     private float animTime;
@@ -166,14 +168,14 @@ public class GameScreen implements Screen{
 				GameConstants.LEVEL_PIXEL_HEIGHT,  
 				(int)(backgroundTime * 8), 
 				0, 
-				(int)(GameConstants.LEVEL_PIXEL_WIDTH * 20), 
-				(int)(GameConstants.LEVEL_PIXEL_HEIGHT * 20), 
+				(int)(GameConstants.LEVEL_PIXEL_WIDTH * 30), 
+				(int)(GameConstants.LEVEL_PIXEL_HEIGHT * 30), 
 				false, 
 				false);
 		game.batch.end();
 		
 		//Game map
-        tiledMapRenderer.render();
+        tiledMapRenderer.render(background);
 		//debugRenderer.render(world, camera.combined);
 		    
 		//HUD and hero
@@ -181,7 +183,7 @@ public class GameScreen implements Screen{
 		mapReader.draw(game.batch, textureAtlas, backgroundTime);
 		hud.draw();
 		game.batch.end();
-
+		tiledMapRenderer.render(walls);
 		stage.draw();
         
 		//Test Box2DLight
