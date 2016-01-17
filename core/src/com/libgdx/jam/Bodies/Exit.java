@@ -21,6 +21,9 @@ public class Exit extends Obstacle{
 	
 	public Exit(final MyGdxGame game, World world, OrthographicCamera camera, MapObject rectangleObject) {
 		super(game, world, camera, rectangleObject);
+		
+		categoryBits = 0010;
+		
 		create(world, camera, rectangleObject);
 		
 		sound = game.assets.get("Sounds/Exit.ogg", Sound.class);

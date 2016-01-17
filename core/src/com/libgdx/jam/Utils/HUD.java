@@ -159,6 +159,11 @@ public class HUD {
 		
 		if(hero.getFuelLevel() <= 0)
 			imageFuelLevel.addAction(Actions.alpha(0));	
+		else{
+			imageFuelLevel.addAction(Actions.alpha(1));
+			outOfFuelAlpha = 0;
+		}
+			
 		if(hero.getOxygenLevel() <= 0)
 			imageOxygenLevel.addAction(Actions.alpha(0));			
 	}

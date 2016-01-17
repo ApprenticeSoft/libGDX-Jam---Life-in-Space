@@ -88,7 +88,7 @@ public class LevelSelectionScreen implements Screen{
 		for(int i = 0; i < GameConstants.NUMBER_OF_LEVEL; i++){
 			TextButton textButton = new TextButton("" + (i + 1), textButtonStyle);
 			levels.add(textButton);
-			if((i + 1)%5 == 0) 
+			if((i + 1)%4 == 0) 
 				tableLevels.add(textButton).row();
 			else 
 				tableLevels.add(textButton);

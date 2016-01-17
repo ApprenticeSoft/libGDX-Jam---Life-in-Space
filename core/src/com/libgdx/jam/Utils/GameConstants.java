@@ -16,7 +16,7 @@ public class GameConstants {
 	public static int PPT = 100;					//Pixel/Tile
 	
 	//Screen constants
-	public static int NB_HORIZONTAL_TILE = 12;
+	public static int NB_HORIZONTAL_TILE = 13;
 	public static float SCREEN_WIDTH = MPP * NB_HORIZONTAL_TILE * PPT;
 	public static float SCREEN_RATIO = (float)Gdx.graphics.getHeight()/(float)Gdx.graphics.getWidth();
 	public static float SCREEN_HEIGHT = SCREEN_WIDTH * SCREEN_RATIO;
@@ -29,7 +29,7 @@ public class GameConstants {
 	public static float MAX_OXYGEN = 120;
 	public static float MAX_FUEL = 80;
 	public static float FUEL_CONSUMPTION = 8;
-	public static float CRUSH_IMPULSE = 300;
+	public static float CRUSH_IMPULSE = 1000;
 	
 	//Obstacles and Items constants
 	public static float DEFAULT_LEAK_FORCE = 20f;
@@ -41,6 +41,6 @@ public class GameConstants {
 	public static boolean GAME_PAUSED = false;
 	public static float ANIM_TIME = 0;
 	public static float LEVEL_PIXEL_WIDTH, LEVEL_PIXEL_HEIGHT;
-	public static int NUMBER_OF_LEVEL = 15;
+	public static int NUMBER_OF_LEVEL = 8;
 	public static int SELECTED_LEVEL = 1;
 }

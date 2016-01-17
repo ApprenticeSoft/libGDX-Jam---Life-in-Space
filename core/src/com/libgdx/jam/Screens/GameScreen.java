@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -65,6 +66,7 @@ public class GameScreen implements Screen{
     //Background sound
     private Music backgroundSound;
     
+    //Box2dLights
 	private RayHandler rayHandler;
 	
 	public GameScreen(final MyGdxGame game){
@@ -87,10 +89,17 @@ public class GameScreen implements Screen{
         World.setVelocityThreshold(0.0f);
         debugRenderer = new Box2DDebugRenderer();
         
+        //Test Box2DLight
+        rayHandler = new RayHandler(world); 
+        rayHandler.resizeFBO(Gdx.graphics.getWidth()/5, Gdx.graphics.getHeight()/5);   
+        rayHandler.setBlur(true);
+        RayHandler.useDiffuseLight(false);
+        
         tiledMap = new TmxMapLoader().load("Levels/Level " + GameConstants.SELECTED_LEVEL + ".tmx");
         tiledMapRenderer = new OrthogonalTiledMapRendererWithSprites(tiledMap, GameConstants.MPP, game.batch);
 
-        mapReader = new TiledMapReader(game, tiledMap, world, camera); 
+        mapReader = new TiledMapReader(game, tiledMap, world, camera, rayHandler); 
+        rayHandler.setAmbientLight(new Color(0,0,0,mapReader.ambiantLightMin)); 
              
         //Graphics
         stage = new Stage();
@@ -99,20 +108,12 @@ public class GameScreen implements Screen{
 		skin.addRegions(textureAtlas);
         hud = new HUD(game, stage, skin, mapReader.hero);
 
-        //Background
-        
+        //Background  
 		backgroundTexture = new Texture(Gdx.files.internal("Images/Stars.jpg"), true);
 		backgroundTexture.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
         
         GameConstants.LEVEL_PIXEL_WIDTH = Float.parseFloat(tiledMap.getProperties().get("width").toString()) * GameConstants.PPT * GameConstants.MPP;
         GameConstants.LEVEL_PIXEL_HEIGHT = Float.parseFloat(tiledMap.getProperties().get("height").toString()) * GameConstants.PPT * GameConstants.MPP;	
-        
-        //Test Box2DLight
-        rayHandler = new RayHandler(world); 
-        rayHandler.resizeFBO(Gdx.graphics.getWidth()/5, Gdx.graphics.getHeight()/5);
-        rayHandler.setShadows(false);    
-        rayHandler.setBlur(true);
-        rayHandler.setAmbientLight(new Color(.1f,.1f,.1f,.1f));
 	}
 
 	@Override
@@ -145,15 +146,9 @@ public class GameScreen implements Screen{
 	        }
 	        else if (mapReader.hero.getFuelLevel() <= 0)
 	        	hud.outOfFuel();	     
-
-			for(Obstacle obstacle : mapReader.obstaclesWithNinePatch)
-				obstacle.active = true;
 		}
 		else{
 			mapReader.soundPause();
-		
-			for(Obstacle obstacle : mapReader.obstaclesWithNinePatch)
-				obstacle.active = false;
 		}
 		
 		stage.act();
@@ -176,7 +171,6 @@ public class GameScreen implements Screen{
 		
 		//Game map
         tiledMapRenderer.render(background);
-		//debugRenderer.render(world, camera.combined);
 		    
 		//HUD and hero
 		game.batch.begin();
@@ -184,11 +178,21 @@ public class GameScreen implements Screen{
 		hud.draw();
 		game.batch.end();
 		tiledMapRenderer.render(walls);
-		stage.draw();
-        
+		
 		//Test Box2DLight
 		rayHandler.setCombinedMatrix(camera);
 		rayHandler.updateAndRender();
+		
+		//Light flickering
+		if(mapReader.lightFlicker){
+			int alpha = MathUtils.random(1,100);		
+			if(alpha < mapReader.flickerFactor)
+				rayHandler.setAmbientLight(0, 0, 0,mapReader.ambiantLightMax);
+			else
+				rayHandler.setAmbientLight(0, 0, 0,mapReader.ambiantLightMin);
+		}
+
+		stage.draw();	
 	}
 
 	@Override
@@ -234,14 +238,14 @@ public class GameScreen implements Screen{
 				    //Switch
 			    	if(fixtureA.getUserData().equals("Tom") && fixtureB.getUserData().equals("Switch")){
 			    		for(ItemSwitch itemSwitch : mapReader.switchs){
-			    			if(itemSwitch.swtichBody == fixtureB.getBody())
-			    				itemSwitch.active(mapReader.obstacles);
+			    			if(itemSwitch.switchBody == fixtureB.getBody())
+			    				itemSwitch.active(mapReader.activableObstacles);
 			    		}
 			    	}
 			    	else if(fixtureB.getUserData().equals("Tom") && fixtureA.getUserData().equals("Switch")){
 			    		for(ItemSwitch itemSwitch : mapReader.switchs){
-			    			if(itemSwitch.swtichBody == fixtureA.getBody())
-			    				itemSwitch.active(mapReader.obstacles);
+			    			if(itemSwitch.switchBody == fixtureA.getBody())
+			    				itemSwitch.active(mapReader.activableObstacles);
 			    		}
 			    	}
 				    
@@ -258,15 +262,6 @@ public class GameScreen implements Screen{
 			    				item.activate();
 			    		}
 			    	}
-			    	/*
-			    	//Contact sound
-			    	if(fixtureA.getUserData().equals("Tom") && fixtureB.getUserData().equals("Obstacle")){
-			    		mapReader.hero.impact();
-			    	}
-			    	else if(fixtureA.getUserData().equals("Obstacle") && fixtureB.getUserData().equals("Tom")){
-				    		mapReader.hero.impact();
-				    }
-			    	*/	
 				}  
 			}
 

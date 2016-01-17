@@ -30,6 +30,5 @@ public class FuelRefill extends Item{
 		
 		if(hero.getFuelLevel() > GameConstants.MAX_FUEL)
 			hero.setFuelLevel(GameConstants.MAX_FUEL);
-		System.out.println("Fuel level after refill : " + hero.getFuelLevel());
 	}
 }

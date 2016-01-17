@@ -8,7 +8,7 @@ public class Data {
 	public static Preferences prefs;
 	
 	public static void Load(){
-		prefs = Gdx.app.getPreferences("Data");
+		prefs = Gdx.app.getPreferences("Cosmonaut.Data");
 		
 		if (!prefs.contains("Level")) {
 		    prefs.putInteger("Level", 1);

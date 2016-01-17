@@ -1,6 +1,6 @@
 package com.libgdx.jam.Bodies;
 
-import box2dLight.PointLight;
+import box2dLight.ConeLight;
 import box2dLight.RayHandler;
 
 import com.badlogic.gdx.Gdx;
@@ -38,7 +38,7 @@ public class Hero {
     private Sound soundJetPack, soundImpact;
 	
 	//Test Box2DLight
-	private PointLight light;
+	private ConeLight coneLight;
 	
 	public Hero(final MyGdxGame game, World world,  OrthographicCamera camera, TiledMap tiledMap){
 		create(game, world, camera, tiledMap);
@@ -46,9 +46,10 @@ public class Hero {
 	
 	public Hero(final MyGdxGame game, World world,  OrthographicCamera camera, TiledMap tiledMap, RayHandler rayHandler){
 		create(game, world, camera, tiledMap);
-        
-        light = new PointLight(rayHandler, 100, new Color(.5f,.5f,.9f,.9f), 40, 0, 0);
-        light.attachToBody(heroBody, 0, 1.01f*bodyHeight);
+
+        coneLight = new ConeLight(rayHandler, 180, new Color(0.75f, 0.75f, 0.75f, 1f), 30, 0, 0, -5, 130);
+        coneLight.attachToBody(heroBody, 0, 1.01f*bodyHeight);    
+        coneLight.setContactFilter((short) 0010, (short)1000, (short)0001);
 	}
 	
 	public void create(final MyGdxGame game, World world,  OrthographicCamera camera, TiledMap tiledMap){
@@ -99,8 +100,9 @@ public class Hero {
 	public void displacement(){	
 		oxygenLevel -= Gdx.graphics.getDeltaTime();
 		
-		if(Gdx.input.isKeyJustPressed(Keys.W) && fuelLevel > 0)
+		if(Gdx.input.isKeyJustPressed(Keys.W) && fuelLevel > 0){
 			soundJetPack.loop(0.5f);
+		}
 		
 		if(Gdx.input.isKeyPressed(Keys.W) && fuelLevel > 0){
 			heroBody.applyForceToCenter(new Vector2(0, GameConstants.JETPACK_IMPULSE).rotate(heroBody.getAngle() * MathUtils.radiansToDegrees), true);

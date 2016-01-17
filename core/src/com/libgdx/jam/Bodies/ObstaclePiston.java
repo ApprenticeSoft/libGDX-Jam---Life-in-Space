@@ -127,6 +127,13 @@ public class ObstaclePiston extends Obstacle{
 
         direction = new Vector2();
         direction = new Vector2(travel[step].x - body.getPosition().x, travel[step].y - body.getPosition().y);
+        
+        
+        //Start position
+		if(rectangleObject1.getProperties().get("Position") != null){
+			if(rectangleObject1.getProperties().get("Position").toString().equals("High"))
+		        body.setTransform(finalPosition, body.getAngle());
+		}
 	}
 	
 	@Override
@@ -153,7 +160,7 @@ public class ObstaclePiston extends Obstacle{
 				body.setLinearVelocity(direction.clamp(speed, speed)); 
 			}
 			
-			sound.setVolume(soundId, 10/(new Vector2(hero.heroBody.getPosition().sub(posX, posY)).len()));
+			sound.setVolume(soundId, 11/(new Vector2(hero.heroBody.getPosition().sub(posX, posY)).len()));
 			sound.resume();
 		}
 		else{

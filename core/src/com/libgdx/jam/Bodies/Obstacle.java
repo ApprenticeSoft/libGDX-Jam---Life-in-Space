@@ -38,6 +38,9 @@ public class Obstacle {
 	//Sound
 	protected Sound sound;
 	
+	//Box2DLight
+	protected short categoryBits = 0001;
+	
 	public Obstacle(final MyGdxGame game, World world, OrthographicCamera camera, MapObject rectangleObject){	
 	}
 	
@@ -76,6 +79,7 @@ public class Obstacle {
         fixtureDef.density = (float)(GameConstants.DENSITY/(width * height));  
         fixtureDef.friction = 0.5f;  
         fixtureDef.restitution = 0.5f;
+        fixtureDef.filter.categoryBits = categoryBits;
    
         body.createFixture(fixtureDef).setUserData("Obstacle");
         body.setUserData("Obstacle");

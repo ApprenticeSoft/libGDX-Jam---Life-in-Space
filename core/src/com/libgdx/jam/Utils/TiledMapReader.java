@@ -1,5 +1,7 @@
 package com.libgdx.jam.Utils;
 
+import box2dLight.RayHandler;
+
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -29,7 +31,7 @@ import com.libgdx.jam.Items.OxygenRefill;
 public class TiledMapReader {
 	
     private MapObjects objects;
-	public Array<Obstacle> obstacles, obstaclesWithNinePatch;
+	public Array<Obstacle> obstacles, obstaclesWithNinePatch, activableObstacles;
 	public Array<Leak> leaks;
 	public Array<ItemSwitch> switchs;
 	public Array<Item> items;
@@ -37,21 +39,57 @@ public class TiledMapReader {
 	private Array<Exit> exits;
 	public Hero hero;
 	public Exit exit;
+	
+	//Box2dLights
+	public float ambiantLightMin, ambiantLightMax;
+	public int flickerFactor;
+	public boolean lightFlicker;
     
-	public TiledMapReader(final MyGdxGame game, TiledMap tiledMap, World world, OrthographicCamera camera){
+	public TiledMapReader(final MyGdxGame game, TiledMap tiledMap, World world, OrthographicCamera camera, RayHandler rayHandler){
 			
-		hero = new Hero(game, world, camera, tiledMap);
+		hero = new Hero(game, world, camera, tiledMap, rayHandler);
 		
 		objects = tiledMap.getLayers().get("Objects").getObjects();
 
         obstacles = new Array<Obstacle>(); 
         obstaclesWithNinePatch = new Array<Obstacle>();    
+        activableObstacles = new Array<Obstacle>();    
         pistons = new Array<MapObject>();
         switchs = new Array<ItemSwitch>();
         items = new Array<Item>();
         leaks = new Array<Leak>();
         exits = new Array<Exit>();
- 
+        
+        //Box2DLights
+        //Does the light flicker ?
+        if(tiledMap.getProperties().get("Light") != null){
+        	if(tiledMap.getProperties().get("Light").equals("Random"))
+        		lightFlicker = true;
+        	else
+        		lightFlicker = false;
+        }
+    	else
+    		lightFlicker = false;
+        //Minimum intensity of the light
+        if(tiledMap.getProperties().get("Ambiant Light Min") != null){
+        	ambiantLightMin = Float.parseFloat(tiledMap.getProperties().get("Ambiant Light Min").toString());
+        }
+        else
+        	ambiantLightMin = 0.4f;
+        //Maximum intensity of the light
+        if(tiledMap.getProperties().get("Ambiant Light Max") != null){
+        	ambiantLightMax = Float.parseFloat(tiledMap.getProperties().get("Ambiant Light Max").toString());
+        }
+        else
+        	ambiantLightMax = 0.9f;
+        //Probability of flickering
+        if(tiledMap.getProperties().get("Flicker Factor") != null){
+        	flickerFactor = Integer.parseInt(tiledMap.getProperties().get("Flicker Factor").toString());
+        }
+        else
+        	flickerFactor = 2;
+        
+        //Reading objects       
         for (RectangleMapObject rectangleObject : objects.getByType(RectangleMapObject.class)) {
         	if(rectangleObject.getProperties().get("Type") != null){
         		//End of the level
@@ -68,6 +106,7 @@ public class TiledMapReader {
         		else if(rectangleObject.getProperties().get("Type").equals("Door")){
 	            	ObstacleDoor obstacle = new ObstacleDoor(game, world, camera, rectangleObject);
 	                obstacles.add(obstacle);
+	                activableObstacles.add(obstacle);
             	}
             	//Pistons
             	else if(rectangleObject.getProperties().get("Type").equals("Piston")){
@@ -77,6 +116,7 @@ public class TiledMapReader {
             	else if(rectangleObject.getProperties().get("Type").equals("Revolving")){
 	            	ObstacleRevolving obstacle = new ObstacleRevolving(game, world, camera, rectangleObject);
 	                obstacles.add(obstacle);
+	                activableObstacles.add(obstacle);
             	}
             	//Leaks
             	else if(rectangleObject.getProperties().get("Type").equals("Leak")){
@@ -98,6 +138,7 @@ public class TiledMapReader {
         					i != j){  				
         				ObstaclePiston piston = new ObstaclePiston(game, world, camera, pistons.get(i), game.assets.get("Images/Images.pack", TextureAtlas.class), pistons.get(j));
         				obstacles.add(piston);
+    	                activableObstacles.add(piston);
         				
         				pistons.removeIndex(i);
         				pistons.removeIndex(j);
@@ -113,6 +154,7 @@ public class TiledMapReader {
         for(PolylineMapObject polylineObject : objects.getByType(PolylineMapObject.class)){
         	ObstacleMoving obstacleMoving = new ObstacleMoving(game, world, camera, polylineObject, game.assets.get("Images/Images.pack", TextureAtlas.class));
         	obstacles.add(obstacleMoving); 	
+            activableObstacles.add(obstacleMoving);
         }
               
         //Spawned items
@@ -120,7 +162,7 @@ public class TiledMapReader {
         	if(tiledMap.getLayers().get("Spawn").getObjects().get(i).getProperties().get("Type") != null){	
         		//Switches
         		if(tiledMap.getLayers().get("Spawn").getObjects().get(i).getProperties().get("Type").equals("Switch")){
-        			ItemSwitch itemSwitch = new ItemSwitch(game, world, camera, tiledMap.getLayers().get("Spawn").getObjects().get(i));
+        			ItemSwitch itemSwitch = new ItemSwitch(game, world, camera, tiledMap.getLayers().get("Spawn").getObjects().get(i), rayHandler);
         			switchs.add(itemSwitch);
         		}
         		//Oxygen Refill
